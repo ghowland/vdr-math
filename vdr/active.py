@@ -18,18 +18,37 @@ from __future__ import annotations
 from fractions import Fraction
 from typing import Union
 
-from vdr.core import VDR, Remainder, ArithmeticFailure
+from vdr.core import VDR, Remainder, ArithmeticFailure, _both_in_basis, _basis_mul, _basis_div
 
 __all__ = ["active_mul", "active_div", "install", "uninstall"]
+
+
+def _flatten_to_basis(x):
+    """
+    Flatten an active basis-frame VDR to closed by projecting
+    remainder back into V via to_qbasis.
+    """
+    from vdr.basis import to_qbasis
+    return to_qbasis(x)
 
 
 def active_mul(a, b):
     """
     Exact multiplication of two VDR objects, including active.
 
+    Both in basis (closed or active): flatten to frame, divmod back.
     Both closed: direct formula V1*V2 / D1*D2.
     At least one active: construct product with cross-term remainder.
     """
+    # Basis check first — before is_closed check.
+    # Active basis values get flattened to closed, then divmod.
+    if _both_in_basis(a, b):
+        if a.is_active:
+            a = _flatten_to_basis(a)
+        if b.is_active:
+            b = _flatten_to_basis(b)
+        return _basis_mul(a, b)
+
     if a.is_closed and b.is_closed:
         return VDR(a.v * b.v, a.d * b.d).normalize()
 
@@ -45,10 +64,19 @@ def active_div(a, b):
     """
     Exact division of two VDR objects.
 
+    Both in basis (closed or active): flatten to frame, divmod back.
     By closed: multiply by reciprocal.
     By active: project divisor to exact rational, invert, multiply.
                Divisor remainder structure lost (v1 compromise).
     """
+    # Basis check first — before is_closed check.
+    if _both_in_basis(a, b):
+        if a.is_active:
+            a = _flatten_to_basis(a)
+        if b.is_active:
+            b = _flatten_to_basis(b)
+        return _basis_div(a, b)
+
     if b.is_closed:
         if b.v == 0:
             raise ArithmeticFailure("Division by zero")
@@ -197,3 +225,4 @@ def uninstall():
     VDR.__rtruediv__ = _original_rdiv
 
     _installed = False
+    

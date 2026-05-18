@@ -65,6 +65,59 @@ class ArithmeticFailure(VDRError):
 
 
 # ---------------------------------------------------------------------------
+# Basis frame detection
+# ---------------------------------------------------------------------------
+
+def _get_basis_denom():
+    """
+    Return the current default basis denominator, or None if basis module
+    is not loaded. Lazy import to avoid circular dependency.
+    """
+    try:
+        from vdr.basis import get_default
+        return 2 ** get_default()
+    except ImportError:
+        return None
+
+
+def _both_in_basis(a, b):
+    """
+    True when both operands share the same D and that D equals the
+    current default basis denominator.
+    """
+    if a.d != b.d:
+        return False
+    denom = _get_basis_denom()
+    if denom is None:
+        return False
+    return a.d == denom
+
+
+def _one_in_basis(a, b):
+    """
+    Check if exactly one operand is in the basis frame.
+    Returns (basis_operand, other_operand) or (None, None).
+    """
+    denom = _get_basis_denom()
+    if denom is None:
+        return None, None
+    if a.d == denom and b.d != denom:
+        return a, b
+    if b.d == denom and a.d != denom:
+        return b, a
+    return None, None
+
+
+def _rebase_to_basis(x):
+    """
+    Project a non-basis VDR onto the current basis frame.
+    Returns a closed VDR with D = basis denominator.
+    """
+    from vdr.basis import to_qbasis
+    return to_qbasis(x)
+
+
+# ---------------------------------------------------------------------------
 # Remainder
 # ---------------------------------------------------------------------------
 
@@ -422,12 +475,47 @@ class VDR:
     def __float__(self):
         return self.to_float()
 
-    # -- closed arithmetic -------------------------------------------------
+    # -- basis-aware arithmetic --------------------------------------------
+
+    def _basis_add_or_fallback(self, other, sign):
+        """
+        Addition/subtraction with basis frame awareness.
+
+        Both in basis, same D: integer add/sub in frame.
+        One in basis, other not: rebase other into basis, then integer op.
+        Neither in basis: cross-multiply as before.
+        """
+        if _both_in_basis(self, other):
+            if sign == 1:
+                return VDR(self.v + other.v, self.d)
+            else:
+                return VDR(self.v - other.v, self.d)
+
+        basis_op, non_basis_op = _one_in_basis(self, other)
+        if basis_op is not None:
+            rebased = _rebase_to_basis(non_basis_op)
+            # figure out which was self and which was other
+            if self.d == basis_op.d and self.v == basis_op.v:
+                if sign == 1:
+                    return VDR(self.v + rebased.v, self.d)
+                else:
+                    return VDR(self.v - rebased.v, self.d)
+            else:
+                # other was the basis operand, self was rebased
+                if sign == 1:
+                    return VDR(rebased.v + other.v, other.d)
+                else:
+                    return VDR(rebased.v - other.v, other.d)
+
+        return None  # signal: no basis path, use fallback
 
     def __add__(self, other):
         from vdr._compat import _coerce
         other = _coerce(other)
         if self.is_closed and other.is_closed:
+            result = self._basis_add_or_fallback(other, sign=1)
+            if result is not None:
+                return result
             return VDR(
                 self.v * other.d + other.v * self.d,
                 self.d * other.d,
@@ -441,6 +529,9 @@ class VDR:
         from vdr._compat import _coerce
         other = _coerce(other)
         if self.is_closed and other.is_closed:
+            result = self._basis_add_or_fallback(other, sign=-1)
+            if result is not None:
+                return result
             return VDR(
                 self.v * other.d - other.v * self.d,
                 self.d * other.d,
@@ -455,6 +546,8 @@ class VDR:
         from vdr._compat import _coerce
         other = _coerce(other)
         if self.is_closed and other.is_closed:
+            if _both_in_basis(self, other):
+                return _basis_mul(self, other)
             return VDR(
                 self.v * other.v,
                 self.d * other.d,
@@ -472,6 +565,8 @@ class VDR:
         if other.is_closed and other.v == 0:
             raise ArithmeticFailure("Division by zero")
         if self.is_closed and other.is_closed:
+            if _both_in_basis(self, other):
+                return _basis_div(self, other)
             return VDR(
                 self.v * other.d,
                 self.d * other.v,
@@ -603,6 +698,38 @@ class VDR:
 
 
 # ---------------------------------------------------------------------------
+# Basis-aware arithmetic helpers
+# ---------------------------------------------------------------------------
+
+def _basis_mul(a, b):
+    """
+    Multiplication with divmod back to basis frame.
+    D stays fixed. Overflow goes to R. Zero loss.
+    """
+    denom = a.d
+    product = a.v * b.v
+    q, s = divmod(product, denom)
+    if s == 0:
+        return VDR(q, denom)
+    return VDR(q, denom, Remainder(0, [VDR(s, denom)]))
+
+
+def _basis_div(a, b):
+    """
+    Division with divmod back to basis frame.
+    D stays fixed. Mismatch witness in R.
+    """
+    denom = a.d
+    if b.v == 0:
+        raise ArithmeticFailure("Division by zero in basis frame")
+    numerator = a.v * denom
+    q, s = divmod(numerator, b.v)
+    if s == 0:
+        return VDR(q, denom)
+    return VDR(q, denom, Remainder(0, [VDR(s, b.v)]))
+
+
+# ---------------------------------------------------------------------------
 # Private helpers
 # ---------------------------------------------------------------------------
 
@@ -614,7 +741,8 @@ def _active_add(a, b, sign=1):
         [V1,D,R1] + [V2,D,R2] = [V1+V2, D, R1+R2]
 
     Different denominator:
-        cross-scale to D1*D2, lift remainders
+        Basis-aware: rebase non-basis operand if one is in basis.
+        Otherwise: cross-scale to D1*D2, lift remainders.
     """
     if a.d == b.d:
         if sign == 1:
@@ -623,6 +751,25 @@ def _active_add(a, b, sign=1):
             new_v = a.v - b.v
         new_r = a.r.combine(b.r, sign=sign)
         return VDR(new_v, a.d, new_r).normalize()
+
+    # different D — check if we should rebase into basis frame
+    basis_op, non_basis_op = _one_in_basis(a, b)
+    if basis_op is not None:
+        rebased = _rebase_to_basis(non_basis_op)
+        denom = basis_op.d
+        # determine operand order for subtraction
+        if a.d == denom:
+            a_v, b_v = a.v, rebased.v
+            a_r, b_r = a.r, rebased.r
+        else:
+            a_v, b_v = rebased.v, b.v
+            a_r, b_r = rebased.r, b.r
+        if sign == 1:
+            new_v = a_v + b_v
+        else:
+            new_v = a_v - b_v
+        new_r = a_r.combine(b_r, sign=sign)
+        return VDR(new_v, denom, new_r).normalize()
 
     new_d = a.d * b.d
     a_lifted_r = a.r.lift(b.d)
