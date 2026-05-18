@@ -1,0 +1,4 @@
+# vdr-math has no required dependencies.
+# Optional: mpmath for arbitrary-precision decimal export.
+#
+#mpmath>=1.3
