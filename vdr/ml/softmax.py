@@ -16,6 +16,7 @@ from typing import Optional, List
 
 from vdr.core import VDR
 from vdr.linalg import Vec, Mat
+from vdr.basis import to_qbasis
 
 __all__ = [
     "softmax",
@@ -179,4 +180,12 @@ def softmax_surrogate_square(logits, shift=None):
         n = len(logits)
         return Vec([VDR(1, n)] * n)
 
-    return Vec([s / total for s in squares])
+    probs = []
+    running = VDR(0)
+    one = to_qbasis(VDR(1))
+    for i in range(len(squares) - 1):
+        p = squares[i] / total
+        probs.append(p)
+        running = running + p
+    probs.append(one - running)
+    return Vec(probs)
