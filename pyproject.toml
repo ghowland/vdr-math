@@ -1,8 +1,62 @@
-[tool.ruff]
-target-version = "py38"
-line-length = 100
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.ruff.lint]
-select = ["E", "F", "W", "I"]
-ignore = ["E501"]  # line length handled by line-length setting
+[project]
+name = "vdr-math"
+version = "0.1.0"
+description = "Exact arithmetic with Value, Denominator, Remainder triples"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    { name = "VDR Project" },
+]
+keywords = [
+    "exact-arithmetic",
+    "rational",
+    "remainder",
+    "VDR",
+    "zero-drift",
+    "linear-algebra",
+    "number-theory",
+    "signal-processing",
+    "quantum",
+    "diffusion",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
+[project.optional-dependencies]
+decimal = ["mpmath"]
+dev = ["pytest", "mpmath"]
+
+[project.urls]
+Homepage = "https://github.com/vdr-project/vdr-math"
+Documentation = "https://github.com/vdr-project/vdr-math#readme"
+Issues = "https://github.com/vdr-project/vdr-math/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vdr"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
