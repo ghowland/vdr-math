@@ -20,6 +20,8 @@ from typing import Callable, Optional, Sequence, Set, List, Union
 from vdr.core import VDR
 from vdr.linalg import Vec
 
+from vdr.basis import to_qbasis
+
 __all__ = [
     "Node",
     "ensure_node",
@@ -54,7 +56,7 @@ def _basis_vdr(x):
 def _basis_zero():
     """Return VDR(0) in basis frame."""
     from vdr.basis import to_qbasis
-    return to_qbasis(VDR(0))
+    return to_qbasis(to_qbasis(0))
 
 
 # ---------------------------------------------------------------------------
@@ -275,13 +277,13 @@ def relu(x):
         # a.grad == VDR(0)
     """
     x = ensure_node(x)
-    val = x.value if x.value > VDR(0) else VDR(0)
+    val = x.value if x.value > to_qbasis(0) else to_qbasis(0)
     out = Node(val, children=[x])
 
     inp = x
 
     def _backward():
-        if inp.value > VDR(0):
+        if inp.value > to_qbasis(0):
             inp.grad = inp.grad + out.grad
         # else: gradient is 0, nothing to add
 

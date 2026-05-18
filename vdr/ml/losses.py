@@ -15,6 +15,8 @@ from __future__ import annotations
 from vdr.core import VDR
 from vdr.linalg import Vec
 
+from vdr.basis import to_qbasis
+
 __all__ = [
     "mse",
     "l1",
@@ -53,7 +55,7 @@ def mse(pred, target):
         raise ValueError("Dimension mismatch: %d vs %d" % (len(pred), len(target)))
     n = len(pred)
     inv_n = _basis_const(1, n)
-    total = VDR(0)
+    total = to_qbasis(0)
     for i in range(n):
         diff = pred[i] - target[i]
         total = total + diff * diff
@@ -71,7 +73,7 @@ def l1(pred, target):
         raise ValueError("Dimension mismatch")
     n = len(pred)
     inv_n = _basis_const(1, n)
-    total = VDR(0)
+    total = to_qbasis(0)
     for i in range(n):
         total = total + abs(pred[i] - target[i])
     return total * inv_n
@@ -84,16 +86,16 @@ def hinge_binary(score, label):
     I: score (VDR), label (int, +1 or -1)
     O: hinge loss as VDR
 
-        hinge_binary(VDR(3, 2), 1) -> VDR(0)
+        hinge_binary(VDR(3, 2), 1) -> to_qbasis(0)
         hinge_binary(VDR(1, 2), 1) -> VDR(1, 2)
     """
     score = _to_vdr(score)
     one = _basis_const(1)
     lab = _basis_const(label)
     margin = one - lab * score
-    if margin > VDR(0):
+    if margin > to_qbasis(0):
         return margin
-    return VDR(0)
+    return to_qbasis(0)
 
 
 def mse_grad(pred, target):
@@ -133,7 +135,7 @@ def l1_grad(pred, target):
     n = len(pred)
     pos = _basis_const(1, n)
     neg = _basis_const(-1, n)
-    zero = VDR(0)
+    zero = to_qbasis(0)
     result = []
     for i in range(n):
         diff = pred[i] - target[i]
