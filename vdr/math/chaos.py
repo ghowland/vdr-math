@@ -156,7 +156,8 @@ def detect_period(orbit):
     I: list of VDR values (exact, so equality testing is reliable)
     O: period as int, or None if no period found within orbit length
 
-    Uses Floyd-like approach: check if orbit[i] == orbit[0] for i > 0.
+    Checks all pairs: finds smallest p > 0 where orbit[i+p] == orbit[i]
+    for some i.
 
         orbit = iterate_map(tent_map, VDR(1, 7), 20)
         detect_period(orbit) -> 3
@@ -164,11 +165,21 @@ def detect_period(orbit):
     if len(orbit) < 2:
         return None
 
-    target = orbit[0]
-    for i in range(1, len(orbit)):
-        if orbit[i] == target:
-            return i
-
+    n = len(orbit)
+    # try each period length
+    for p in range(1, n):
+        # check if orbit[i] == orbit[i+p] for some valid i
+        found = False
+        for i in range(n - p):
+            if orbit[i] == orbit[i + p]:
+                # verify it holds for subsequent steps too
+                valid = True
+                for j in range(i, min(i + p, n - p)):
+                    if orbit[j] != orbit[j + p]:
+                        valid = False
+                        break
+                if valid:
+                    return p
     return None
 
 

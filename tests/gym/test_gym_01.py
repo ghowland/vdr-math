@@ -108,11 +108,10 @@ class TestConvergents:
         assert cvs[3] == VDR(355, 113)
 
     def test_e_convergents(self):
-        coeffs = e_cf(6)
+        coeffs = e_cf(7)
         cvs = convergents(coeffs)
-        # 5th convergent is 87/32
-        assert cvs[4] == VDR(87, 32)
-
+        # 87/32 is convergent at index 5
+        assert cvs[5] == VDR(87, 32)
 
 class TestECF:
     def test_length(self):

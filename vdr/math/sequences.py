@@ -49,33 +49,17 @@ def fibonacci(n):
 
         fibonacci(30) -> VDR(832040)
 
-    Uses matrix power method for large n, direct for small n.
+    Uses iterative computation.
     """
     if n < 0:
         raise ValueError("n must be non-negative")
     if n <= 1:
         return VDR(n)
 
-    # fast doubling:
-    # F(2k) = F(k) * (2*F(k+1) - F(k))
-    # F(2k+1) = F(k)^2 + F(k+1)^2
     a, b = 0, 1
-    bits = []
-    m = n
-    while m > 0:
-        bits.append(m & 1)
-        m >>= 1
-    bits.reverse()
-
-    for bit in bits[1:]:
-        # doubling
-        c = a * (2 * b - a)
-        d = a * a + b * b
-        a, b = c, d
-        if bit:
-            a, b = b, a + b
-
-    return VDR(a)
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return VDR(b)
 
 
 def fibonacci_seq(n):

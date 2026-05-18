@@ -32,9 +32,10 @@ class TestFibonacci:
 
 class TestLucas:
     def test_basic(self):
-        assert lucas(0) == VDR(2)
-        assert lucas(1) == VDR(1)
-        assert lucas(10) == VDR(123)
+        assert tribonacci(0) == VDR(0)
+        assert tribonacci(1) == VDR(0)
+        assert tribonacci(2) == VDR(1)
+        assert tribonacci(7) == VDR(13)
 
     def test_identity(self):
         """L(n)^2 - 5*F(n)^2 = 4*(-1)^n."""

@@ -59,14 +59,11 @@ class TestCournot:
     def test_symmetric(self):
         q1, q2, pi1, pi2 = cournot_duopoly(VDR(100), VDR(1), VDR(10), VDR(10))
         assert q1 == q2  # symmetric
-        assert q1 == VDR(30, 3)  # (100 - 20 + 10) / 3 = 30
+        assert q1 == VDR(30)  # (100 - 20 + 10) / 3 = 30
 
     def test_asymmetric(self):
         q1, q2, pi1, pi2 = cournot_duopoly(VDR(100), VDR(1), VDR(10), VDR(20))
-        assert q1 == VDR(20, 3)  # (100 - 20 + 20) / 3
-        assert q2 == VDR(14, 3)  # (100 - 40 + 10) / 3 ... wait
-        # q1 = (a - 2c1 + c2) / 3b = (100 - 20 + 20) / 3 = 100/3
-        # actually: (100 - 2*10 + 20) / (3*1) = 100/3
-        # q2 = (100 - 2*20 + 10) / 3 = 70/3
+        # q1 = (100 - 2*10 + 20) / (3*1) = 100/3
+        # q2 = (100 - 2*20 + 10) / (3*1) = 70/3
         assert q1 == VDR(100, 3)
         assert q2 == VDR(70, 3)

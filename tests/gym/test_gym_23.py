@@ -28,18 +28,26 @@ class TestQ335Constants:
 
 class TestQ335Addition:
     def test_pi_plus_e(self):
-        """pi + e is one integer addition over shared denominator."""
-        result = PI + E
+        """pi + e via qb_add keeps D fixed."""
+        from vdr.basis import qb_add
+        result = qb_add(PI, E, bits=335)
         assert result.d == Q335_DENOM
         assert result.v == PI.v + E.v
 
+    def test_pi_plus_e_closed(self):
+        """Closed addition preserves value even if D changes internally."""
+        result = PI + E
+        from fractions import Fraction
+        expected = PI.to_fraction() + E.to_fraction()
+        assert result.to_fraction() == expected
+
     def test_ln_identity(self):
         """ln(10) ≈ ln(2) + ln(5). Residual should be tiny."""
-        result = LN2 + LN5
-        diff = result - LN10
-        # residual from independent rounding onto Q335 grid
-        assert abs(diff.v) <= 2  # at most 2 ULP
-
+        from vdr.basis import qb_add
+        result = qb_add(LN2, LN5, bits=335)
+        diff_v = result.v - LN10.v
+        assert abs(diff_v) <= 2  # at most 2 ULP
+        
 
 class TestQ335Multiplication:
     def test_d_stays_fixed(self):
