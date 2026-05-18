@@ -171,13 +171,12 @@ def train(n_epochs=None, model=None, verbose=True):
             # check softmax sum
             sum_ok = True
             for _, probs in results:
-                total = VDR(0)
+                total = to_qbasis(VDR(0))
                 for i in range(len(probs)):
                     total = total + probs[i]
-                if total != to_qbasis(VDR(1)):
+                if total.to_fraction() != 1:
                     sum_ok = False
                     break
-
             print("  epoch %2d  loss=%.6f  softmax_sum=1: %s" % (
                 epoch + 1, avg.to_float(), "yes" if sum_ok else "NO"))
 
