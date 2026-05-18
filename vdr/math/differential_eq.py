@@ -225,10 +225,11 @@ def lotka_volterra_step(state, h, a, b, c, d_param):
                            VDR(1,10), VDR(1,100), VDR(1,10), VDR(1,100))
     """
     x, y = state
-    dx = a * x - b * x * y
-    dy = -c * y + d_param * x * y
-    new_x = x + h * dx
-    new_y = y + h * dy
+    xy = x * y
+    dx = a * x - b * xy
+    dy = -c * y + d_param * xy
+    new_x = (x + h * dx).normalize()
+    new_y = (y + h * dy).normalize()
     return (new_x, new_y)
 
 

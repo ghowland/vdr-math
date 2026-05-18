@@ -138,25 +138,37 @@ _installed = False
 
 def _patched_mul(self, other):
     from vdr._compat import _coerce
-    other = _coerce(other)
+    try:
+        other = _coerce(other)
+    except TypeError:
+        return NotImplemented
     return active_mul(self, other)
-
 
 def _patched_rmul(self, other):
     from vdr._compat import _coerce
-    return active_mul(self, _coerce(other))
+    try:
+        other = _coerce(other)
+    except TypeError:
+        return NotImplemented
+    return active_mul(self, other)
 
 
 def _patched_div(self, other):
     from vdr._compat import _coerce
-    other = _coerce(other)
+    try:
+        other = _coerce(other)
+    except TypeError:
+        return NotImplemented
     return active_div(self, other)
 
 
 def _patched_rdiv(self, other):
     from vdr._compat import _coerce
+    try:
+        other = _coerce(other)
+    except TypeError:
+        return NotImplemented
     return active_div(_coerce(other), self)
-
 
 def install():
     """
