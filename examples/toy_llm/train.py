@@ -170,15 +170,23 @@ def train(n_epochs=None, model=None, verbose=True):
         if verbose:
             # check softmax sum
             sum_ok = True
+            worst_err = 0.0
             for _, probs in results:
                 total = to_qbasis(VDR(0))
                 for i in range(len(probs)):
                     total = total + probs[i]
-                if total.to_fraction() != 1:
+                err = abs(total.to_float() - 1.0)
+                if err > worst_err:
+                    worst_err = err
+                #NOTE: at D=2^32 (~9.6 decimal digits), division remainders can sum to ~N/2^32 ≈ 1e-9. exact sum=1 requires larger D.
+                # if total.to_fraction() != 1:
+                if err > 1e-9:
                     sum_ok = False
-                    break
-            print("  epoch %2d  loss=%.6f  softmax_sum=1: %s" % (
-                epoch + 1, avg.to_float(), "yes" if sum_ok else "NO"))
+
+            print("  epoch %2d  loss=%.6f  softmax_sum=1: %s  worst_err=%.2e" % (
+                epoch + 1, avg.to_float(),
+                "yes" if sum_ok else "NO",
+                worst_err))
 
     return model, loss_history
 

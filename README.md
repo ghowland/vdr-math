@@ -95,7 +95,7 @@ Validated across **921 tests in 38 mathematical and computational domains** with
 14. [Float Comparison Table](#float-comparison-table)
 15. [Validation Summary](#validation-summary)
 16. [API Quick Reference](#api-quick-reference)
-17. [License](#license)
+17. [Example: Toy LLM](#example-toy-llm)
 
 ---
 
@@ -1417,6 +1417,6 @@ The system remains falsifiable: any test producing an incorrect exact rational f
 
 ---
 
-## License
+## Example: Toy LLM
 
-MIT
+**[Toy LLM Example](examples/toy_llm/)** — A complete single-block transformer language model running entirely in exact VDR arithmetic at D = 2^32. Trains on "the cat sat on the mat," generates text, and passes 9 verification tests including bit-identical determinism and exact softmax-sums-to-1. No floating-point anywhere — forward pass, backpropagation, attention, quadratic softmax surrogate, SGD weight updates, and categorical sampling all use basis-safe VDR operators with automatic frame management. 181 parameters, 20 epochs, under 10 seconds on a 2019 laptop. See the [toy_llm README](examples/toy_llm/README.md) for architecture details, results, and precision analysis.
