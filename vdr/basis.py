@@ -49,6 +49,9 @@ __all__ = [
 DEFAULT_BITS = 335
 Q335 = 2 ** 335
 
+def get_default():
+    """Return current default bit width."""
+    return DEFAULT_BITS
 
 def set_default(bits):
     """
@@ -56,16 +59,10 @@ def set_default(bits):
 
         vdr.basis.set_default(668)  # 200-digit precision
     """
-    global DEFAULT_BITS, Q335
+    global DEFAULT_BITS
     if not isinstance(bits, int) or bits < 1:
         raise ValueError("bits must be a positive integer, got %r" % bits)
     DEFAULT_BITS = bits
-    Q335 = 2 ** bits  # Q335 name kept for convenience even at other widths
-
-
-def get_default():
-    """Return current default bit width."""
-    return DEFAULT_BITS
 
 
 # ---------------------------------------------------------------------------
