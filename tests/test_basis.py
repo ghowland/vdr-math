@@ -7,7 +7,7 @@ from fractions import Fraction
 
 from vdr.core import VDR, Remainder
 from vdr.basis import (
-    DEFAULT_BITS, Q335,
+    get_default, Q335,
     set_default, get_default, q_basis_denominator,
     to_qbasis, vec_to_qbasis, mat_to_qbasis,
     qb_add, qb_mul, qb_div,

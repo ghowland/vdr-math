@@ -79,7 +79,7 @@ def q_basis_denominator(bits=None):
         q_basis_denominator(668)   # 2^668 for 200 digits
     """
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     return 2 ** bits
 
 
@@ -98,7 +98,7 @@ def to_qbasis(x, bits=None):
         to_qbasis(Fraction(1, 3))     # exact rational projected
     """
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     denom = 2 ** bits
 
     if isinstance(x, VDR):
@@ -126,7 +126,7 @@ def vec_to_qbasis(v, bits=None):
     """Project each element of a Vec onto the basis."""
     from vdr.linalg import Vec
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     return Vec([to_qbasis(x, bits) for x in v])
 
 
@@ -134,7 +134,7 @@ def mat_to_qbasis(m, bits=None):
     """Project each element of a Mat onto the basis."""
     from vdr.linalg import Mat
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     rows = []
     for i in range(m.nrows):
         row = [to_qbasis(m[i, j], bits) for j in range(m.ncols)]
@@ -156,7 +156,7 @@ def qb_add(a, b, bits=None):
     If operands have different D, rebases both first.
     """
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     denom = 2 ** bits
 
     # If both already in the right frame, do direct integer add
@@ -183,7 +183,7 @@ def qb_mul(a, b, bits=None):
     D never changed. R caught what V couldn't absorb — exactly.
     """
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     denom = 2 ** bits
 
     a = _ensure_basis(a, denom, bits)
@@ -207,7 +207,7 @@ def qb_div(a, b, bits=None):
     Odd factors go into R.
     """
     if bits is None:
-        bits = DEFAULT_BITS
+        bits = get_default()
     denom = 2 ** bits
 
     a = _ensure_basis(a, denom, bits)
