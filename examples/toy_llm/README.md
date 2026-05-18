@@ -120,7 +120,7 @@ Sampled:  the cat sat sat sat sat
 Top-k:    the cat sat sat sat sat
 ```
 
-The model converges to predicting "sat" as the dominant next token, which is expected — with only 2 training windows, "sat" follows both "the cat" and "cat sat" contexts. The deterministic RNG produces exact rational values in [0, 1) with denominator 2^31, and the CDF comparison is exact — no float threshold ambiguity.
+The model converges to predicting "sat" as the dominant next token, which is expected — with only 2 training windows, "sat" follows both "the cat" and "cat sat" contexts. The deterministic RNG produces exact rational values in [0, 1] with denominator 2^31, and the CDF comparison is exact — no float threshold ambiguity.
 
 ## Verification Suite
 
