@@ -1,28 +1,24 @@
 """
 examples/toy_llm/config.py
 
-Toy LLM configuration — small fixed D-frames matching frontier quantized models.
-Every numeric value is a VDR or int. No float.
-
-D-frames are power-of-two denominators:
-  D_WEIGHT = 128   (i8-scale weights)
-  D_ACT    = 128   (i8-scale activations)
-  D_SCORE  = 256   (attention scores)
-  D_PROB   = 256   (softmax probabilities)
-  D_ACC    = 32768 (i16-scale accumulators)
-  D_GRAD   = 32768 (i16-scale gradients)
+Toy LLM configuration — small fixed D-frames.
 """
 
 from vdr.core import VDR
 
-# D-frames — power-of-two denominators, divmod is bit-shift
-D_WEIGHT = 128
-D_ACT = 128
-D_SCORE = 256
-D_PROB = 256
-D_ACC = 32768
-D_GRAD = 32768
-D_OPT = 32768
+# D-frames as bit counts — D = 2^bits
+BITS_WEIGHT = 7       # D=128, i8-scale weights
+BITS_ACT = 7          # D=128, i8-scale activations
+BITS_SCORE = 8        # D=256, attention scores
+BITS_PROB = 8         # D=256, softmax probabilities
+BITS_GRAD = 15        # D=32768, i16-scale gradients
+
+# Derived D values
+D_WEIGHT = 2 ** BITS_WEIGHT   # 128
+D_ACT = 2 ** BITS_ACT         # 128
+D_SCORE = 2 ** BITS_SCORE     # 256
+D_PROB = 2 ** BITS_PROB       # 256
+D_GRAD = 2 ** BITS_GRAD       # 32768
 
 # Model shape
 VOCAB_SIZE = 5
@@ -36,7 +32,7 @@ N_EPOCHS = 20
 LR = VDR(1, 128)       # learning rate in weight frame
 SEED = 42
 
-# Surrogate softmax shift constant
-SURR_C = VDR(4, 1)     # additive shift to ensure positivity
+# Surrogate softmax shift
+SURR_C = VDR(4, 1)
 
 CORPUS = "the cat sat on the mat"
