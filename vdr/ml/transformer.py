@@ -8,6 +8,7 @@ vdr.ml.transformer — Exact transformer architecture.
 
 Every attention weight sums to exactly 1. Every gradient exact.
 No float drift across layers or sequence positions.
+All weight matrices projected to basis frame via to_qbasis.
 """
 
 from __future__ import annotations
@@ -93,7 +94,7 @@ class Embedding:
         """
         return [self.lookup(i) for i in ids]
 
-    def to_qbasis(self, bits):
+    def to_qbasis(self, bits=None):
         """Project all embedding vectors onto Q basis."""
         from vdr.basis import vec_to_qbasis
         return Embedding(
@@ -140,6 +141,12 @@ class FFNBlock(Module):
         g = self.l2.backward(grad_out)
         g = self.act.backward(g)
         return self.l1.backward(g)
+
+    def to_qbasis(self, bits=None):
+        """Project both linear layers to basis frame."""
+        self.l1.to_qbasis(bits)
+        self.l2.to_qbasis(bits)
+        return self
 
 
 # ---------------------------------------------------------------------------
@@ -225,6 +232,16 @@ class TransformerBlock(Module):
 
         return result, Q, K, V, attn_out
 
+    def to_qbasis(self, bits=None):
+        """Project all weight matrices and FFN to basis frame."""
+        from vdr.basis import mat_to_qbasis
+        self.Wq = mat_to_qbasis(self.Wq, bits)
+        self.Wk = mat_to_qbasis(self.Wk, bits)
+        self.Wv = mat_to_qbasis(self.Wv, bits)
+        self.Wo = mat_to_qbasis(self.Wo, bits)
+        self.ffn.to_qbasis(bits)
+        return self
+
 
 # ---------------------------------------------------------------------------
 # Transformer Language Model
@@ -236,7 +253,7 @@ class TransformerLM(Module):
 
     embedding -> transformer blocks -> output projection -> logits
 
-        model = TransformerLM(embedding, [block1, block2], output_linear)
+        model = TransformerLM(embedding, [block1, block2], output_proj)
         logits = model.forward_logits([0, 1, 2, 3])
     """
 
@@ -301,10 +318,14 @@ class TransformerLM(Module):
         logits = [self.output_proj.forward(h) for h in hidden]
         return logits, hidden
 
-    def to_qbasis(self, bits):
-        """Project embedding to Q basis. Blocks unchanged."""
-        return TransformerLM(
-            self.embedding.to_qbasis(bits),
-            self.blocks,
-            self.output_proj,
-        )
+    def to_qbasis(self, bits=None):
+        """
+        Project entire model to basis frame:
+        embedding, all blocks (weights + FFN), and output projection.
+        """
+        self.embedding = self.embedding.to_qbasis(bits)
+        for block in self.blocks:
+            block.to_qbasis(bits)
+        self.output_proj.to_qbasis(bits)
+        return self
+    

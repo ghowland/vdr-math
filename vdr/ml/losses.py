@@ -7,6 +7,7 @@ vdr.ml.losses — Exact loss functions.
     grad = mse_grad(pred, target) # exact gradient as Vec
 
 All losses exact VDR rationals. Gradients exact via closed-form expressions.
+Constants projected to basis frame to avoid D mixing in hot paths.
 """
 
 from __future__ import annotations
@@ -32,6 +33,12 @@ def _to_vdr(x):
     raise TypeError("Expected VDR or int")
 
 
+def _basis_const(v, d=1):
+    """Project a rational constant to basis frame."""
+    from vdr.basis import to_qbasis
+    return to_qbasis(VDR(v, d))
+
+
 def mse(pred, target):
     """
     Mean squared error: (1/n) * sum (pred_i - target_i)^2.
@@ -45,11 +52,12 @@ def mse(pred, target):
     if len(pred) != len(target):
         raise ValueError("Dimension mismatch: %d vs %d" % (len(pred), len(target)))
     n = len(pred)
+    inv_n = _basis_const(1, n)
     total = VDR(0)
     for i in range(n):
         diff = pred[i] - target[i]
         total = total + diff * diff
-    return total / VDR(n)
+    return total * inv_n
 
 
 def l1(pred, target):
@@ -62,10 +70,11 @@ def l1(pred, target):
     if len(pred) != len(target):
         raise ValueError("Dimension mismatch")
     n = len(pred)
+    inv_n = _basis_const(1, n)
     total = VDR(0)
     for i in range(n):
         total = total + abs(pred[i] - target[i])
-    return total / VDR(n)
+    return total * inv_n
 
 
 def hinge_binary(score, label):
@@ -75,11 +84,13 @@ def hinge_binary(score, label):
     I: score (VDR), label (int, +1 or -1)
     O: hinge loss as VDR
 
-        hinge_binary(VDR(3, 2), 1) -> VDR(0)  # margin > 1
+        hinge_binary(VDR(3, 2), 1) -> VDR(0)
         hinge_binary(VDR(1, 2), 1) -> VDR(1, 2)
     """
     score = _to_vdr(score)
-    margin = VDR(1) - VDR(label) * score
+    one = _basis_const(1)
+    lab = _basis_const(label)
+    margin = one - lab * score
     if margin > VDR(0):
         return margin
     return VDR(0)
@@ -99,7 +110,7 @@ def mse_grad(pred, target):
     if len(pred) != len(target):
         raise ValueError("Dimension mismatch")
     n = len(pred)
-    two_over_n = VDR(2, n)
+    two_over_n = _basis_const(2, n)
     result = []
     for i in range(n):
         result.append(two_over_n * (pred[i] - target[i]))
@@ -120,15 +131,18 @@ def l1_grad(pred, target):
     if len(pred) != len(target):
         raise ValueError("Dimension mismatch")
     n = len(pred)
+    pos = _basis_const(1, n)
+    neg = _basis_const(-1, n)
+    zero = VDR(0)
     result = []
     for i in range(n):
         diff = pred[i] - target[i]
-        if diff > VDR(0):
-            result.append(VDR(1, n))
-        elif diff < VDR(0):
-            result.append(VDR(-1, n))
+        if diff > zero:
+            result.append(pos)
+        elif diff < zero:
+            result.append(neg)
         else:
-            result.append(VDR(0))
+            result.append(zero)
     return Vec(result)
 
 
@@ -142,12 +156,13 @@ def cross_entropy_binary(pred_prob, label, log_depth=16):
 
     Uses exact log series.
     """
-    from vdr.ml.logarithm import log_series
+    from vdr.math.transcendental import ln_series
 
     pred_prob = _to_vdr(pred_prob)
     label = _to_vdr(label)
+    one = _basis_const(1)
 
-    log_p = log_series(pred_prob, log_depth)
-    log_1_minus_p = log_series(VDR(1) - pred_prob, log_depth)
+    log_p = ln_series(pred_prob, log_depth)
+    log_1_minus_p = ln_series(one - pred_prob, log_depth)
 
-    return -(label * log_p + (VDR(1) - label) * log_1_minus_p)
+    return -(label * log_p + (one - label) * log_1_minus_p)

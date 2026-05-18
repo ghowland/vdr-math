@@ -8,6 +8,7 @@ vdr.ml.tensor — Batch tensor operations for VDR.
 
 Tensor3D is batch x sequence x dimension.
 All operations exact VDR arithmetic across batches.
+Fill and zero values projected to basis frame.
 """
 
 from __future__ import annotations
@@ -35,6 +36,18 @@ def _to_vdr(x):
     raise TypeError("Expected VDR or int")
 
 
+def _basis_zero():
+    """Return VDR(0) in basis frame."""
+    from vdr.basis import to_qbasis
+    return to_qbasis(VDR(0))
+
+
+def _basis_zero_vec(n):
+    """Return zero Vec of length n in basis frame."""
+    z = _basis_zero()
+    return Vec([z] * n)
+
+
 class Tensor3D:
     """
     3D tensor: batch x sequence x dimension.
@@ -59,9 +72,9 @@ class Tensor3D:
 
     @classmethod
     def zero(cls, b, n, d):
-        """Zero tensor of shape (b, n, d)."""
+        """Zero tensor of shape (b, n, d) in basis frame."""
         return cls([
-            [Vec.zero(d) for _ in range(n)]
+            [_basis_zero_vec(d) for _ in range(n)]
             for _ in range(b)
         ])
 
@@ -152,14 +165,19 @@ def masked_fill_rows(rows, mask, fill=None):
     """
     Apply element-wise mask to rows of Vec.
 
+    Fill value projected to basis frame once.
+
     I: list of Vec, mask as list of list of bool,
-       fill value (VDR, default 0)
+       fill value (VDR, default 0 in basis)
     O: list of Vec with masked positions replaced by fill
 
         masked = masked_fill_rows(rows, mask, VDR(-1000))
     """
     if fill is None:
-        fill = VDR(0)
+        basis_fill = _basis_zero()
+    else:
+        from vdr.basis import to_qbasis
+        basis_fill = to_qbasis(_to_vdr(fill))
 
     result = []
     for i in range(len(rows)):
@@ -168,7 +186,7 @@ def masked_fill_rows(rows, mask, fill=None):
             if mask[i][j]:
                 row.append(rows[i][j])
             else:
-                row.append(fill)
+                row.append(basis_fill)
         result.append(Vec(row))
     return result
 

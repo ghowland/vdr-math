@@ -8,6 +8,7 @@ vdr.ml.attention — Exact self-attention mechanism.
 
 Attention scores exact. Softmax weights sum to exactly 1.
 Weighted sums exact. No float drift in long sequences.
+All mask fill values projected to basis frame to avoid D mixing.
 """
 
 from __future__ import annotations
@@ -28,6 +29,19 @@ __all__ = [
     "multi_head_split",
     "multi_head_concat",
 ]
+
+
+def _basis_fill_value(fill=None):
+    """
+    Return a fill value in basis frame for masking.
+    Default is -1000 projected to basis.
+    """
+    from vdr.basis import to_qbasis
+    if fill is None:
+        return to_qbasis(VDR(-1000))
+    if isinstance(fill, VDR):
+        return to_qbasis(fill)
+    return to_qbasis(VDR(fill))
 
 
 def attention_scores(Q, K):
@@ -78,15 +92,15 @@ def apply_boolean_mask(scores, mask, fill=None):
 
     Where mask[i][j] is False, replace score with fill value
     (very negative for softmax to produce ~0 weight).
+    Fill value is projected to basis frame once.
 
     I: score rows (list of Vec), mask (list of lists of bool),
-       fill value (VDR, default -1000)
+       fill value (VDR, default -1000 in basis)
     O: masked score rows (list of Vec)
 
         masked = apply_boolean_mask(scores, causal_mask(n))
     """
-    if fill is None:
-        fill = VDR(-1000)
+    basis_fill = _basis_fill_value(fill)
 
     result = []
     for i in range(len(scores)):
@@ -95,7 +109,7 @@ def apply_boolean_mask(scores, mask, fill=None):
             if mask[i][j]:
                 row.append(scores[i][j])
             else:
-                row.append(fill)
+                row.append(basis_fill)
         result.append(Vec(row))
     return result
 
@@ -194,9 +208,7 @@ def multi_head_split(vecs, n_heads):
     I: list of Vec, number of heads
     O: list of lists — outer list is heads, inner is sequence
 
-        # 2 heads, dim 4 -> each head gets dim 2
         heads = multi_head_split([Vec.from_ints([1,2,3,4])], 2)
-        # [[Vec([VDR(1),VDR(2)])], [Vec([VDR(3),VDR(4)])]]
     """
     if not vecs:
         return [[] for _ in range(n_heads)]

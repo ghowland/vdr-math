@@ -11,6 +11,7 @@ vdr.ml.autodiff — Exact automatic differentiation via computation graph.
 
 All gradients exact VDR rationals via reverse-mode AD.
 Chain rule applied symbolically — no numerical differentiation.
+Node values and gradients projected to basis frame to avoid D mixing.
 """
 
 from __future__ import annotations
@@ -44,6 +45,18 @@ def _to_vdr(x):
     raise TypeError("Expected VDR or int")
 
 
+def _basis_vdr(x):
+    """Project a VDR or int to basis frame."""
+    from vdr.basis import to_qbasis
+    return to_qbasis(_to_vdr(x))
+
+
+def _basis_zero():
+    """Return VDR(0) in basis frame."""
+    from vdr.basis import to_qbasis
+    return to_qbasis(VDR(0))
+
+
 # ---------------------------------------------------------------------------
 # Node
 # ---------------------------------------------------------------------------
@@ -54,7 +67,7 @@ class Node:
 
     Each node holds:
         - value: exact VDR result of the forward computation
-        - grad: accumulated gradient (VDR), initially 0
+        - grad: accumulated gradient (VDR), initialized to basis-frame zero
         - _backward: closure that propagates gradient to children
         - _children: set of parent nodes for topological sort
 
@@ -69,13 +82,13 @@ class Node:
 
     def __init__(self, value, children=None, backward_fn=None):
         self.value = _to_vdr(value)
-        self.grad = VDR(0)
+        self.grad = _basis_zero()
         self._children = set(children) if children else set()
         self._backward = backward_fn if backward_fn else lambda: None
 
     def zero_grad(self):
-        """Reset gradient to zero."""
-        self.grad = VDR(0)
+        """Reset gradient to basis-frame zero."""
+        self.grad = _basis_zero()
 
     # -- arithmetic --------------------------------------------------------
 
@@ -183,7 +196,7 @@ class Node:
             # d/dx (x^n) = n * x^(n-1)
             if exp == 0:
                 return
-            deriv = VDR(exp)
+            deriv = _basis_vdr(VDR(exp))
             x_pow = VDR(1)
             for _ in range(exp - 1):
                 x_pow = x_pow * s.value
@@ -198,14 +211,14 @@ class Node:
         """
         Reverse-mode automatic differentiation.
 
-        Sets self.grad = 1, then propagates through the graph
-        in reverse topological order.
+        Sets self.grad = 1 (in basis frame), then propagates through
+        the graph in reverse topological order.
         """
         topo = []
         visited = set()
         _build_topo(self, visited, topo)
 
-        self.grad = VDR(1)
+        self.grad = _basis_vdr(VDR(1))
         for node in reversed(topo):
             node._backward()
 
@@ -235,13 +248,13 @@ def _build_topo(node, visited, topo):
 # ---------------------------------------------------------------------------
 
 def ensure_node(x):
-    """Convert scalar to Node if needed."""
+    """Convert scalar to Node if needed. Projects to basis frame."""
     if isinstance(x, Node):
         return x
     if isinstance(x, VDR):
         return Node(x)
     if isinstance(x, int):
-        return Node(VDR(x))
+        return Node(_basis_vdr(VDR(x)))
     raise TypeError("Cannot convert %s to Node" % type(x).__name__)
 
 
@@ -288,7 +301,7 @@ def sum_nodes(xs):
     O: Node representing the sum
     """
     if not xs:
-        return Node(VDR(0))
+        return Node(_basis_zero())
     result = xs[0]
     for x in xs[1:]:
         result = result + x
@@ -304,9 +317,9 @@ def mean_nodes(xs):
     """
     n = len(xs)
     if n == 0:
-        return Node(VDR(0))
+        return Node(_basis_zero())
     s = sum_nodes(xs)
-    return s * Node(VDR(1, n))
+    return s * Node(_basis_vdr(VDR(1, n)))
 
 
 # ---------------------------------------------------------------------------
@@ -333,7 +346,7 @@ def mse_loss(pred, target):
         diff = pred[i] - ensure_node(target[i])
         terms.append(diff ** 2)
 
-    return sum_nodes(terms) * Node(VDR(1, n))
+    return sum_nodes(terms) * Node(_basis_vdr(VDR(1, n)))
 
 
 # ---------------------------------------------------------------------------
@@ -370,7 +383,7 @@ def linear_node(weights, xs, bias):
 
 
 def zero_grads(nodes):
-    """Reset gradients of all nodes to zero."""
+    """Reset gradients of all nodes to basis-frame zero."""
     for n in nodes:
         n.zero_grad()
 

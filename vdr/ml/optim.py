@@ -10,7 +10,8 @@ vdr.ml.optim — Exact optimizers for VDR neural networks.
     opt.step()  # w = w - lr * grad, exact
 
 All parameter updates exact VDR arithmetic.
-No float accumulation in optimizer state.
+Hyperparameters projected to basis frame at construction to avoid
+per-element D mixing on every step.
 """
 
 from __future__ import annotations
@@ -33,6 +34,12 @@ def _to_vdr(x):
     raise TypeError("Expected VDR or int")
 
 
+def _basis_vdr(x):
+    """Project a VDR or int to basis frame."""
+    from vdr.basis import to_qbasis
+    return to_qbasis(_to_vdr(x))
+
+
 class SGD:
     """
     Stochastic Gradient Descent optimizer.
@@ -41,13 +48,15 @@ class SGD:
 
     I: list of parameters (VecParam or MatParam), learning rate (VDR)
 
+    lr is projected to basis frame at construction.
+
         opt = SGD(model.parameters(), lr=VDR(1, 100))
         opt.step()
     """
 
     def __init__(self, params, lr):
         self.params = list(params)
-        self.lr = _to_vdr(lr)
+        self.lr = _basis_vdr(lr)
 
     def zero_grad(self):
         """Zero all parameter gradients."""
@@ -69,14 +78,18 @@ class Momentum:
 
     I: params list, learning rate (VDR), momentum beta (VDR, default 9/10)
 
+    lr and beta are projected to basis frame at construction.
+    Velocity buffers initialized in basis frame.
+
         opt = Momentum(model.parameters(), lr=VDR(1, 100), beta=VDR(9, 10))
         opt.step()
     """
 
     def __init__(self, params, lr, beta=None):
         self.params = list(params)
-        self.lr = _to_vdr(lr)
-        self.beta = _to_vdr(beta) if beta is not None else VDR(9, 10)
+        self.lr = _basis_vdr(lr)
+        self.beta = _basis_vdr(beta) if beta is not None else _basis_vdr(VDR(9, 10))
+        self.one = _basis_vdr(VDR(1))
 
         # initialize velocity buffers
         self._velocities = []
@@ -94,8 +107,9 @@ class Momentum:
             v = self._velocities[i]
 
             # v = beta * v + grad
-            v = p.combine_scaled(v, self.beta, p.grad, VDR(1))
+            v = p.combine_scaled(v, self.beta, p.grad, self.one)
             self._velocities[i] = v
 
             # w = w - lr * v
             p.apply_update(v, self.lr)
+            

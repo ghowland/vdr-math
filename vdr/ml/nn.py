@@ -80,7 +80,6 @@ class VecParam:
 
         p = VecParam(Vec.from_ints([1, 2, 3]), name="bias")
         p.zero_grad()
-        # after backward: p.grad contains accumulated gradient
         p.step(lr=VDR(1, 100))
     """
 
@@ -119,6 +118,13 @@ class VecParam:
         """Apply an arbitrary update vector: value = value - lr * update."""
         lr = _to_vdr(lr)
         self.value = self.value - update.scale(lr)
+
+    def to_qbasis(self, bits=None):
+        """Project value and reset grad in basis frame."""
+        from vdr.basis import vec_to_qbasis
+        self.value = vec_to_qbasis(self.value, bits)
+        self.grad = Vec.zero(len(self.value))
+        return self
 
 
 class MatParam:
@@ -163,6 +169,13 @@ class MatParam:
         lr = _to_vdr(lr)
         self.value = self.value - update.scale(lr)
 
+    def to_qbasis(self, bits=None):
+        """Project value and reset grad in basis frame."""
+        from vdr.basis import mat_to_qbasis
+        self.value = mat_to_qbasis(self.value, bits)
+        self.grad = Mat.zero(self.value.nrows, self.value.ncols)
+        return self
+
 
 # ---------------------------------------------------------------------------
 # Outer product helper
@@ -200,6 +213,12 @@ class Module:
 
     def backward(self, grad_out):
         raise NotImplementedError
+
+    def to_qbasis(self, bits=None):
+        """Project all parameters to basis frame. Override in subclasses."""
+        for p in self.parameters():
+            p.to_qbasis(bits)
+        return self
 
 
 # ---------------------------------------------------------------------------
@@ -320,6 +339,10 @@ class ReLU(Module):
             for i in range(len(x))
         ])
 
+    def to_qbasis(self, bits=None):
+        """ReLU has no parameters."""
+        return self
+
 
 # ---------------------------------------------------------------------------
 # Sequential container
@@ -359,6 +382,12 @@ class Sequential(Module):
         for layer in reversed(self.layers):
             grad_out = layer.backward(grad_out)
         return grad_out
+
+    def to_qbasis(self, bits=None):
+        """Project all layers to basis frame."""
+        for layer in self.layers:
+            layer.to_qbasis(bits)
+        return self
 
 
 # ---------------------------------------------------------------------------
@@ -401,3 +430,10 @@ class FFN(Module):
         g = self.l2.backward(grad_out)
         g = self.act.backward(g)
         return self.l1.backward(g)
+
+    def to_qbasis(self, bits=None):
+        """Project both linear layers to basis frame."""
+        self.l1.to_qbasis(bits)
+        self.l2.to_qbasis(bits)
+        return self
+    

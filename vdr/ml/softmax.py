@@ -8,6 +8,7 @@ vdr.ml.softmax — Exact softmax and logsumexp.
 
 Uses max-subtraction for stability (exact, no overflow).
 Exp via Taylor series at configurable depth.
+All constants projected to basis frame to avoid D mixing.
 """
 
 from __future__ import annotations
@@ -32,13 +33,35 @@ def _to_vdr(x):
     raise TypeError("Expected VDR or int, got %s" % type(x).__name__)
 
 
-def _exp(x, depth):
-    """Taylor exp inlined to avoid circular imports."""
+def _build_inv_table(depth):
+    """
+    Precompute 1/k in basis frame for k=1..depth.
+    Called once per exp evaluation, not per element.
+    """
+    from vdr.basis import to_qbasis
+    table = [None]  # index 0 unused
+    for k in range(1, depth + 1):
+        table.append(to_qbasis(VDR(1, k)))
+    return table
+
+
+def _exp(x, depth, inv_table=None):
+    """
+    Taylor exp: sum_{k=0}^{depth} x^k / k!
+
+    If inv_table is provided, uses precomputed basis-frame 1/k
+    to avoid per-iteration D mixing from VDR(k) division.
+    """
     total = VDR(1)
     term = VDR(1)
-    for k in range(1, depth + 1):
-        term = term * x / VDR(k)
-        total = total + term
+    if inv_table is not None:
+        for k in range(1, depth + 1):
+            term = term * x * inv_table[k]
+            total = total + term
+    else:
+        for k in range(1, depth + 1):
+            term = term * x / VDR(k)
+            total = total + term
     return total
 
 
@@ -66,10 +89,12 @@ def softmax(logits, exp_depth=16):
 
         softmax(Vec.from_ints([1, 2, 3]))
     """
+    inv_table = _build_inv_table(exp_depth)
+
     m = _vec_max(logits)
     shifted = Vec([x - m for x in logits])
 
-    exps = [_exp(shifted[i], exp_depth) for i in range(len(shifted))]
+    exps = [_exp(shifted[i], exp_depth, inv_table) for i in range(len(shifted))]
 
     total = VDR(0)
     for e in exps:
@@ -92,12 +117,14 @@ def logsumexp(logits, exp_depth=16, log_depth=16):
     """
     from vdr.math.transcendental import ln_series
 
+    inv_table = _build_inv_table(exp_depth)
+
     m = _vec_max(logits)
     shifted = Vec([x - m for x in logits])
 
     total = VDR(0)
     for i in range(len(shifted)):
-        total = total + _exp(shifted[i], exp_depth)
+        total = total + _exp(shifted[i], exp_depth, inv_table)
 
     return m + ln_series(total, log_depth)
 
@@ -119,22 +146,31 @@ def softmax_matrix_rows(M, exp_depth=16):
     return Mat([list(r) for r in rows])
 
 
-def softmax_surrogate_square(logits):
+def softmax_surrogate_square(logits, shift=None):
     """
     Polynomial softmax surrogate using squared values.
 
-    p_i = x_i^2 / sum(x_j^2)
+    p_i = (x_i - shift)^2 / sum((x_j - shift)^2)
 
     Avoids exp entirely. Still sums to exactly 1.
-    Less accurate approximation to true softmax but useful when
-    exp is too expensive.
+    Shift parameter centers logits to keep V slots small.
+    Default shift is the minimum logit.
 
-    I: logits as Vec
+    I: logits as Vec, optional shift as VDR
     O: probability Vec, sums to exactly 1
 
         softmax_surrogate_square(Vec.from_ints([1, 2, 3]))
+        softmax_surrogate_square(logits, shift=VDR(0))
     """
-    squares = [x * x for x in logits]
+    if shift is None:
+        shift = logits[0]
+        for i in range(1, len(logits)):
+            if logits[i] < shift:
+                shift = logits[i]
+
+    shifted = [x - shift for x in logits]
+    squares = [x * x for x in shifted]
+
     total = VDR(0)
     for s in squares:
         total = total + s
