@@ -1,0 +1,3 @@
+# vdr.core
+
+::: vdr.core

@@ -1,0 +1,113 @@
+site_name: vdr-math
+site_description: Exact arithmetic with Value, Denominator, Remainder triples
+repo_url: https://github.com/vdr-project/vdr-math
+repo_name: vdr-project/vdr-math
+
+theme:
+  name: material
+  palette:
+    scheme: default
+    primary: indigo
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - search.suggest
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            heading_level: 3
+            docstring_style: google
+            show_signature_annotations: true
+            separate_signature: true
+            merge_init_into_class: true
+
+nav:
+  - Home: index.md
+  - Understanding VDR: understanding.md
+  - Cookbook: cookbook.md
+  - Migration Guide: migration.md
+  - Domain Extension Guide: extension.md
+  - API Reference:
+    - Core:
+      - vdr.core: api/core.md
+      - vdr.active: api/active.md
+      - vdr.fn: api/fn.md
+      - vdr.linalg: api/linalg.md
+      - vdr.export: api/export.md
+      - vdr.basis: api/basis.md
+    - Math Domains:
+      - Number Theory: api/math/number_theory.md
+      - Continued Fractions: api/math/continued_fractions.md
+      - Combinatorics: api/math/combinatorics.md
+      - Sequences: api/math/sequences.md
+      - Polynomial: api/math/polynomial.md
+      - Symbolic: api/math/symbolic.md
+      - Probability: api/math/probability.md
+      - Geometry: api/math/geometry.md
+      - Optimization: api/math/optimization.md
+      - Differential Equations: api/math/differential_eq.md
+      - Graph Theory: api/math/graph.md
+      - Game Theory: api/math/game_theory.md
+      - Cryptographic: api/math/cryptographic.md
+      - Coding Theory: api/math/coding_theory.md
+      - Topology: api/math/topology.md
+      - Tropical & Lattice: api/math/tropical.md
+      - Control Theory: api/math/control.md
+      - Wavelets: api/math/wavelets.md
+      - Chaos: api/math/chaos.md
+      - Transcendental: api/math/transcendental.md
+    - Signal Processing:
+      - Convolution: api/signal/convolution.md
+      - DFT: api/signal/dft.md
+      - Filters: api/signal/filters.md
+      - Schedule: api/signal/schedule.md
+    - Physics:
+      - QED: api/physics/qed.md
+      - Quantum: api/physics/quantum.md
+      - Orbital: api/physics/orbital.md
+      - Optics: api/physics/optics.md
+      - Structural: api/physics/structural.md
+      - Thermodynamics: api/physics/thermo.md
+      - Crystallography: api/physics/crystallography.md
+      - Geodesy: api/physics/geodesy.md
+    - Machine Learning:
+      - Softmax: api/ml/softmax.md
+      - Exp: api/ml/exp.md
+      - Logarithm: api/ml/logarithm.md
+      - Neural Networks: api/ml/nn.md
+      - Autodiff: api/ml/autodiff.md
+      - Optimizers: api/ml/optim.md
+      - Attention: api/ml/attention.md
+      - Transformer: api/ml/transformer.md
+      - Sampling: api/ml/sampling.md
+      - Trainer: api/ml/trainer.md
+      - Losses: api/ml/losses.md
+      - Datasets: api/ml/datasets.md
+      - Checkpoint: api/ml/checkpoint.md
+      - Metrics: api/ml/metrics.md
+      - RNG: api/ml/rng.md
+      - Init: api/ml/init.md
+      - Tensor: api/ml/tensor.md
+    - Diffusion:
+      - Schedule: api/diffusion/schedule.md
+      - Forward: api/diffusion/forward.md
+      - Reverse: api/diffusion/reverse.md
+      - Sampling: api/diffusion/sampling.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - toc:
+      permalink: true
+
