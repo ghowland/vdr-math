@@ -162,10 +162,15 @@ def qb_add(a, b, bits=None):
         bits = DEFAULT_BITS
     denom = 2 ** bits
 
+    # If both already in the right frame, do direct integer add
+    if isinstance(a, VDR) and a.d == denom and a.is_closed and \
+       isinstance(b, VDR) and b.d == denom and b.is_closed:
+        return VDR(a.v + b.v, denom)
+
     a = _ensure_basis(a, denom, bits)
     b = _ensure_basis(b, denom, bits)
 
-    return VDR(a.v + b.v, denom).normalize()
+    return VDR(a.v + b.v, denom)
 
 
 def qb_mul(a, b, bits=None):

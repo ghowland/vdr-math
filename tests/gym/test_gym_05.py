@@ -65,7 +65,7 @@ class TestTribonacci:
         assert tribonacci(0) == VDR(0)
         assert tribonacci(1) == VDR(0)
         assert tribonacci(2) == VDR(1)
-        assert tribonacci(7) == VDR(24)
+        assert tribonacci(7) == VDR(13)
 
 
 class TestRationalRecurrence:
