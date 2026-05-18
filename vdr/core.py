@@ -427,9 +427,6 @@ class VDR:
     def __add__(self, other):
         from vdr._compat import _coerce
         other = _coerce(other)
-        # Same-D fast path: one integer add, D unchanged
-        if self.d == other.d and self.is_closed and other.is_closed:
-            return VDR(self.v + other.v, self.d)
         if self.is_closed and other.is_closed:
             return VDR(
                 self.v * other.d + other.v * self.d,
@@ -443,9 +440,6 @@ class VDR:
     def __sub__(self, other):
         from vdr._compat import _coerce
         other = _coerce(other)
-        # Same-D fast path: one integer sub, D unchanged
-        if self.d == other.d and self.is_closed and other.is_closed:
-            return VDR(self.v - other.v, self.d)
         if self.is_closed and other.is_closed:
             return VDR(
                 self.v * other.d - other.v * self.d,
@@ -461,13 +455,6 @@ class VDR:
         from vdr._compat import _coerce
         other = _coerce(other)
         if self.is_closed and other.is_closed:
-            # Same-D fast path: divmod keeps D fixed, overflow to R
-            if self.d == other.d and self.d != 1:
-                product = self.v * other.v
-                q, s = divmod(product, self.d)
-                if s == 0:
-                    return VDR(q, self.d)
-                return VDR(q, self.d, Remainder(0, [VDR(s, self.d)]))
             return VDR(
                 self.v * other.v,
                 self.d * other.d,
@@ -485,13 +472,6 @@ class VDR:
         if other.is_closed and other.v == 0:
             raise ArithmeticFailure("Division by zero")
         if self.is_closed and other.is_closed:
-            # Same-D fast path: a/b = a.v/b.v in same frame
-            if self.d == other.d and self.d != 1:
-                numerator = self.v * self.d
-                q, s = divmod(numerator, other.v)
-                if s == 0:
-                    return VDR(q, self.d)
-                return VDR(q, self.d, Remainder(0, [VDR(s, other.v)]))
             return VDR(
                 self.v * other.d,
                 self.d * other.v,
