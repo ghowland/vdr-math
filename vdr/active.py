@@ -27,9 +27,28 @@ def active_mul(a, b):
     """
     Exact multiplication of two VDR objects, including active.
 
-    Both closed: direct formula V1*V2 / D1*D2.
-    At least one active: construct product with cross-term remainder.
+    Same-D: project both to fraction, multiply, divmod back to D.
+    Different-D closed: direct formula.
+    Different-D active: cross-term expansion.
     """
+    # Same-D path: keep D fixed regardless of active/closed status
+    if a.d == b.d and a.d != 1:
+        d = a.d
+        # project both to exact rationals, multiply, divmod back
+        fa = a.to_fraction()
+        fb = b.to_fraction()
+        product = fa * fb
+        # express as [Q, D, remainder] 
+        num = product.numerator
+        den = product.denominator
+        # we want result as p/d where p = round(product * d)
+        # exact: num * d / den = Q remainder S
+        big = num * d
+        q, s = divmod(big, den)
+        if s == 0:
+            return VDR(q, d)
+        return VDR(q, d, Remainder(0, [VDR(s, den)]))
+
     if a.is_closed and b.is_closed:
         return VDR(a.v * b.v, a.d * b.d).normalize()
 
@@ -45,10 +64,26 @@ def active_div(a, b):
     """
     Exact division of two VDR objects.
 
+    Same-D: project both to fraction, divide, divmod back to D.
     By closed: multiply by reciprocal.
-    By active: project divisor to exact rational, invert, multiply.
-               Divisor remainder structure lost (v1 compromise).
+    By active: project divisor, invert, multiply.
     """
+    # Same-D path: keep D fixed
+    if a.d == b.d and a.d != 1:
+        d = a.d
+        fa = a.to_fraction()
+        fb = b.to_fraction()
+        if fb == 0:
+            raise ArithmeticFailure("Division by zero")
+        result = fa / fb
+        num = result.numerator
+        den = result.denominator
+        big = num * d
+        q, s = divmod(big, den)
+        if s == 0:
+            return VDR(q, d)
+        return VDR(q, d, Remainder(0, [VDR(s, den)]))
+
     if b.is_closed:
         if b.v == 0:
             raise ArithmeticFailure("Division by zero")
