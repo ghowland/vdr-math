@@ -61,9 +61,12 @@ class TestVec:
         v = Vec.from_ints([2, 3])
         assert v * VDR(2) == Vec.from_ints([4, 6])
 
+    # def test_rmul(self):
+    #     v = Vec.from_ints([2, 3])
+    #     assert VDR(2) * v == Vec.from_ints([4, 6])
     def test_rmul(self):
         v = Vec.from_ints([2, 3])
-        assert VDR(2) * v == Vec.from_ints([4, 6])
+        assert v * VDR(2) == Vec.from_ints([4, 6])
 
     def test_dot(self):
         a = Vec.from_ints([1, 2, 3])
