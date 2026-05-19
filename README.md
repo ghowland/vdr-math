@@ -15,8 +15,8 @@ y = VDR(2, 7)    # exact 2/7
 z = x + y        # exact 13/21
 
 # Remainders — the third slot catches what V/D can't absorb
-a = VDR(0, 7, 3) + VDR(0, 7, 4)  # VDR(0, 1, 1) — normalize reduced D
-VDR(0, 7, 7).compact()            # VDR(1, 7, 0) — 3+4=7 fills D, rolls into V
+VDR(0, 7, 3) + VDR(0, 7, 4)  # VDR(0, 1, 1) — normalize reduced D
+VDR(0, 7, 7).compact()       # VDR(1, 7, 0) — 3+4=7 fills D, rolls into V
 ```
 
 **Remainder is first-class. Never error. Never residue.**
