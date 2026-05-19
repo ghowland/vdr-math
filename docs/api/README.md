@@ -1,0 +1,512 @@
+<!-- markdownlint-disable -->
+
+# API Overview
+
+## Modules
+
+- [`active`](./active.md#module-active): vdr.active — Active multiplication and division for VDR objects.
+- [`basis`](./basis.md#module-basis): vdr.basis — D-frame management and Q335 basis.
+- [`core`](./core.md#module-core): VDR — Value, Denominator, Remainder.
+- [`diffusion`](./diffusion.md#module-diffusion): vdr.diffusion — Exact diffusion model arithmetic.
+- [`diffusion.forward`](./diffusion.forward.md#module-diffusionforward): vdr.diffusion.forward — Exact forward diffusion process.
+- [`diffusion.reverse`](./diffusion.reverse.md#module-diffusionreverse): vdr.diffusion.reverse — Exact reverse diffusion process.
+- [`diffusion.sampling`](./diffusion.sampling.md#module-diffusionsampling): vdr.diffusion.sampling — Verification and testing utilities for diffusion.
+- [`diffusion.schedule`](./diffusion.schedule.md#module-diffusionschedule): vdr.diffusion.schedule — Exact noise schedules for diffusion models.
+- [`export`](./export.md#module-export): vdr.export — Lossy export boundary.
+- [`fn`](./fn.md#module-fn): vdr.fn — Functional remainder for VDR objects.
+- [`linalg`](./linalg.md#module-linalg): vdr.linalg — Exact rational linear algebra over VDR objects.
+- [`math`](./math.md#module-math): vdr.math — Exact mathematical domains built on VDR arithmetic.
+- [`math.chaos`](./math.chaos.md#module-mathchaos): vdr.math.chaos — Exact chaotic map iteration and period detection.
+- [`math.coding_theory`](./math.coding_theory.md#module-mathcoding_theory): vdr.math.coding_theory — Exact finite field and error correction.
+- [`math.combinatorics`](./math.combinatorics.md#module-mathcombinatorics): vdr.math.combinatorics — Exact combinatorial functions.
+- [`math.continued_fractions`](./math.continued_fractions.md#module-mathcontinued_fractions): vdr.math.continued_fractions — Exact continued fraction operations.
+- [`math.control`](./math.control.md#module-mathcontrol): vdr.math.control — Exact control theory computations.
+- [`math.cryptographic`](./math.cryptographic.md#module-mathcryptographic): vdr.math.cryptographic — Exact modular arithmetic and cryptographic primitives.
+- [`math.differential_eq`](./math.differential_eq.md#module-mathdifferential_eq): vdr.math.differential_eq — Exact discrete ODE solvers over VDR.
+- [`math.game_theory`](./math.game_theory.md#module-mathgame_theory): vdr.math.game_theory — Exact game-theoretic computations.
+- [`math.geometry`](./math.geometry.md#module-mathgeometry): vdr.math.geometry — Exact computational geometry over VDR.
+- [`math.graph`](./math.graph.md#module-mathgraph): vdr.math.graph — Exact graph algorithms over VDR.
+- [`math.number_theory`](./math.number_theory.md#module-mathnumber_theory): vdr.math.number_theory — Exact integer and rational number theory.
+- [`math.optimization`](./math.optimization.md#module-mathoptimization): vdr.math.optimization — Exact optimization methods over VDR.
+- [`math.polynomial`](./math.polynomial.md#module-mathpolynomial): vdr.math.polynomial — Exact polynomial arithmetic over VDR.
+- [`math.probability`](./math.probability.md#module-mathprobability): vdr.math.probability — Exact probability computations.
+- [`math.sequences`](./math.sequences.md#module-mathsequences): vdr.math.sequences — Exact recursive sequences.
+- [`math.symbolic`](./math.symbolic.md#module-mathsymbolic): vdr.math.symbolic — Exact symbolic algebra over VDR.
+- [`math.topology`](./math.topology.md#module-mathtopology): vdr.math.topology — Exact algebraic topology computations.
+- [`math.transcendental`](./math.transcendental.md#module-mathtranscendental): vdr.math.transcendental — Exact transcendental arithmetic.
+- [`math.tropical`](./math.tropical.md#module-mathtropical): vdr.math.tropical — Exact tropical algebra and lattice computations.
+- [`math.wavelets`](./math.wavelets.md#module-mathwavelets): vdr.math.wavelets — Exact Haar wavelet transforms.
+- [`ml`](./ml.md#module-ml): vdr.ml — Exact machine learning primitives.
+- [`ml.attention`](./ml.attention.md#module-mlattention): vdr.ml.attention — Exact self-attention mechanism.
+- [`ml.autodiff`](./ml.autodiff.md#module-mlautodiff): vdr.ml.autodiff — Exact automatic differentiation via computation graph.
+- [`ml.checkpoint`](./ml.checkpoint.md#module-mlcheckpoint): vdr.ml.checkpoint — Exact model state save/load.
+- [`ml.datasets`](./ml.datasets.md#module-mldatasets): vdr.ml.datasets — Tokenization and dataset utilities.
+- [`ml.exp`](./ml.exp.md#module-mlexp): vdr.ml.exp — Exact exponential function for ML pipelines.
+- [`ml.init`](./ml.init.md#module-mlinit): vdr.ml.init — Exact rational weight initialization for neural networks.
+- [`ml.logarithm`](./ml.logarithm.md#module-mllogarithm): vdr.ml.logarithm — Exact logarithm for ML pipelines.
+- [`ml.losses`](./ml.losses.md#module-mllosses): vdr.ml.losses — Exact loss functions.
+- [`ml.metrics`](./ml.metrics.md#module-mlmetrics): vdr.ml.metrics — Exact evaluation metrics.
+- [`ml.nn`](./ml.nn.md#module-mlnn): vdr.ml.nn — Exact neural network layers and parameters.
+- [`ml.optim`](./ml.optim.md#module-mloptim): vdr.ml.optim — Exact optimizers for VDR neural networks.
+- [`ml.rng`](./ml.rng.md#module-mlrng): vdr.ml.rng — Deterministic exact rational random number generator.
+- [`ml.sampling`](./ml.sampling.md#module-mlsampling): vdr.ml.sampling — Exact sampling from probability distributions.
+- [`ml.softmax`](./ml.softmax.md#module-mlsoftmax): vdr.ml.softmax — Exact softmax and logsumexp.
+- [`ml.tensor`](./ml.tensor.md#module-mltensor): vdr.ml.tensor — Batch tensor operations for VDR.
+- [`ml.trainer`](./ml.trainer.md#module-mltrainer): vdr.ml.trainer — Exact training loops for VDR neural networks.
+- [`ml.transformer`](./ml.transformer.md#module-mltransformer): vdr.ml.transformer — Exact transformer architecture.
+- [`physics`](./physics.md#module-physics): vdr.physics — Exact physical computation domains.
+- [`physics.crystallography`](./physics.crystallography.md#module-physicscrystallography): vdr.physics.crystallography — Exact crystallographic computations.
+- [`physics.geodesy`](./physics.geodesy.md#module-physicsgeodesy): vdr.physics.geodesy — Exact geodetic computations.
+- [`physics.optics`](./physics.optics.md#module-physicsoptics): vdr.physics.optics — Exact paraxial optics via ABCD matrices.
+- [`physics.orbital`](./physics.orbital.md#module-physicsorbital): vdr.physics.orbital — Exact orbital mechanics.
+- [`physics.qed`](./physics.qed.md#module-physicsqed): vdr.physics.qed — Exact QED electron anomalous magnetic moment.
+- [`physics.quantum`](./physics.quantum.md#module-physicsquantum): vdr.physics.quantum — Exact quantum mechanics computations.
+- [`physics.structural`](./physics.structural.md#module-physicsstructural): vdr.physics.structural — Exact structural mechanics.
+- [`physics.thermo`](./physics.thermo.md#module-physicsthermo): vdr.physics.thermo — Exact thermodynamic computations.
+- [`signal`](./signal.md#module-signal): vdr.signal — Exact digital signal processing.
+- [`signal.convolution`](./signal.convolution.md#module-signalconvolution): vdr.signal.convolution — Exact discrete convolution and correlation.
+- [`signal.dft`](./signal.dft.md#module-signaldft): vdr.signal.dft — Exact Discrete Fourier Transform.
+- [`signal.filters`](./signal.filters.md#module-signalfilters): vdr.signal.filters — Exact digital filters.
+- [`signal.schedule`](./signal.schedule.md#module-signalschedule): vdr.signal.schedule — Exact noise schedules for diffusion and signal processing.
+
+## Classes
+
+- [`core.ArithmeticFailure`](./core.md#class-arithmeticfailure)
+- [`core.InvalidStructureError`](./core.md#class-invalidstructureerror)
+- [`core.RebaseError`](./core.md#class-rebaseerror)
+- [`core.Remainder`](./core.md#class-remainder): The remainder slot of a VDR triple.
+- [`core.VDR`](./core.md#class-vdr): Exact finite discrete triple: [V, D, R]
+- [`core.VDRError`](./core.md#class-vdrerror): Base error for all VDR operations.
+- [`core.ZeroDenominatorError`](./core.md#class-zerodenominatorerror)
+- [`schedule.DiffusionSchedule`](./diffusion.schedule.md#class-diffusionschedule): Precomputed noise schedule for diffusion models.
+- [`fn.FnRemainder`](./fn.md#class-fnremainder): A remainder slot holding a callable instead of concrete structure.
+- [`linalg.LinAlgError`](./linalg.md#class-linalgerror): Linear algebra specific errors.
+- [`linalg.Mat`](./linalg.md#class-mat): Exact VDR matrix — list of row Vecs, all same dimension.
+- [`linalg.Vec`](./linalg.md#class-vec): Exact VDR vector — an ordered list of VDR objects.
+- [`autodiff.Node`](./ml.autodiff.md#class-node): Computation graph node for reverse-mode automatic differentiation.
+- [`nn.FFN`](./ml.nn.md#class-ffn): Two-layer feed-forward network with ReLU activation.
+- [`nn.Linear`](./ml.nn.md#class-linear): Exact linear layer: y = W @ x + b.
+- [`nn.MatParam`](./ml.nn.md#class-matparam): Trainable matrix parameter with gradient accumulator.
+- [`nn.Module`](./ml.nn.md#class-module): Base class for neural network modules.
+- [`nn.ReLU`](./ml.nn.md#class-relu): Exact ReLU activation: y_i = max(0, x_i).
+- [`nn.Sequential`](./ml.nn.md#class-sequential): Sequential composition of layers.
+- [`nn.VecParam`](./ml.nn.md#class-vecparam): Trainable vector parameter with gradient accumulator.
+- [`optim.Momentum`](./ml.optim.md#class-momentum): SGD with momentum optimizer.
+- [`optim.SGD`](./ml.optim.md#class-sgd): Stochastic Gradient Descent optimizer.
+- [`rng.VDRRandom`](./ml.rng.md#class-vdrrandom): Deterministic pseudo-random number generator for VDR.
+- [`tensor.Tensor3D`](./ml.tensor.md#class-tensor3d): 3D tensor: batch x sequence x dimension.
+- [`transformer.Embedding`](./ml.transformer.md#class-embedding): Lookup table embedding: integer token id -> Vec.
+- [`transformer.FFNBlock`](./ml.transformer.md#class-ffnblock): Feed-forward network block: linear -> relu -> linear.
+- [`transformer.TransformerBlock`](./ml.transformer.md#class-transformerblock): Single transformer block: self-attention + FFN.
+- [`transformer.TransformerLM`](./ml.transformer.md#class-transformerlm): Complete transformer language model.
+- [`signal.Handlers`](./signal.md#class-handlers): An enumeration.
+- [`signal.ItimerError`](./signal.md#class-itimererror)
+- [`signal.Sigmasks`](./signal.md#class-sigmasks): An enumeration.
+- [`signal.Signals`](./signal.md#class-signals): An enumeration.
+- [`signal.struct_siginfo`](./signal.md#class-struct_siginfo): struct_siginfo: Result from sigwaitinfo or sigtimedwait.
+
+## Functions
+
+- [`active.active_div`](./active.md#function-active_div): Exact division of two VDR objects.
+- [`active.active_mul`](./active.md#function-active_mul): Exact multiplication of two VDR objects, including active.
+- [`active.install`](./active.md#function-install): Patch VDR with active multiplication and division.
+- [`active.uninstall`](./active.md#function-uninstall): Restore original VDR operators (active mul/div raises).
+- [`basis.get_default`](./basis.md#function-get_default): Return current default bit width.
+- [`basis.mat_to_qbasis`](./basis.md#function-mat_to_qbasis): Project each element of a Mat onto the basis.
+- [`basis.q_basis_denominator`](./basis.md#function-q_basis_denominator): Return the basis denominator 2^bits.
+- [`basis.qb_add`](./basis.md#function-qb_add): Addition staying in basis frame.
+- [`basis.qb_div`](./basis.md#function-qb_div): Division with divmod back to basis frame.
+- [`basis.qb_mul`](./basis.md#function-qb_mul): Multiplication with divmod back to basis frame.
+- [`basis.set_default`](./basis.md#function-set_default): Set the default basis bit width.
+- [`basis.to_qbasis`](./basis.md#function-to_qbasis): Project a value onto the 2^bits grid as [round(x * 2^bits), 2^bits, 0].
+- [`basis.vec_to_qbasis`](./basis.md#function-vec_to_qbasis): Project each element of a Vec onto the basis.
+- [`forward.forward_sample`](./diffusion.forward.md#function-forward_sample): Forward diffusion: sample x_t from x_0.
+- [`forward.forward_sample_step`](./diffusion.forward.md#function-forward_sample_step): One-step forward diffusion from x_{t-1} to x_t.
+- [`forward.forward_trajectory`](./diffusion.forward.md#function-forward_trajectory): Complete forward diffusion trajectory.
+- [`reverse.compute_posterior_mean`](./diffusion.reverse.md#function-compute_posterior_mean): Posterior mean for reverse step.
+- [`reverse.compute_x0_prediction`](./diffusion.reverse.md#function-compute_x0_prediction): Predict x_0 from x_t and predicted noise.
+- [`reverse.reverse_sample_loop`](./diffusion.reverse.md#function-reverse_sample_loop): Complete reverse sampling loop from x_T to x_0.
+- [`reverse.reverse_step`](./diffusion.reverse.md#function-reverse_step): One stochastic reverse diffusion step.
+- [`reverse.reverse_step_ddim`](./diffusion.reverse.md#function-reverse_step_ddim): DDIM (Denoising Diffusion Implicit Models) deterministic reverse step.
+- [`sampling.make_oracle_predictor`](./diffusion.sampling.md#function-make_oracle_predictor): Create a perfect noise predictor (oracle) for testing.
+- [`sampling.roundtrip_error`](./diffusion.sampling.md#function-roundtrip_error): Compute roundtrip error as sum of squared differences.
+- [`sampling.verify_coefficient_identity`](./diffusion.sampling.md#function-verify_coefficient_identity): Verify (sqrt(alpha_bar))^2 + (sqrt(1-alpha_bar))^2 ≈ 1 for all t.
+- [`sampling.verify_ddim_roundtrip`](./diffusion.sampling.md#function-verify_ddim_roundtrip): Verify DDIM deterministic roundtrip.
+- [`sampling.verify_forward_reverse_roundtrip`](./diffusion.sampling.md#function-verify_forward_reverse_roundtrip): Verify forward-reverse roundtrip error.
+- [`sampling.verify_multi_step_drift`](./diffusion.sampling.md#function-verify_multi_step_drift): Verify that drift does NOT grow across multiple forward-reverse cycles.
+- [`sampling.verify_schedule_consistency`](./diffusion.sampling.md#function-verify_schedule_consistency): Verify internal consistency of diffusion schedule.
+- [`sampling.verify_snr_monotonic`](./diffusion.sampling.md#function-verify_snr_monotonic): Verify signal-to-noise ratio is strictly decreasing.
+- [`schedule.cosine_schedule`](./diffusion.schedule.md#function-cosine_schedule): Cosine noise schedule with exact rational cosine approximation.
+- [`schedule.exact_sqrt`](./diffusion.schedule.md#function-exact_sqrt): Newton sqrt with caching.
+- [`schedule.linear_schedule`](./diffusion.schedule.md#function-linear_schedule): Linear noise schedule.
+- [`export.to_decimal`](./export.md#function-to_decimal): Render VDR value as a decimal string with `digits` significant figures.
+- [`export.to_float`](./export.md#function-to_float): Lossy projection to Python float (64-bit IEEE 754).
+- [`export.to_fraction`](./export.md#function-to_fraction): Exact projection to fractions.Fraction.
+- [`fn.discrete_derivative`](./fn.md#function-discrete_derivative): Discrete derivative operator.
+- [`fn.discrete_derivative_nth`](./fn.md#function-discrete_derivative_nth): Nth-order discrete derivative by repeated application.
+- [`fn.discrete_integral`](./fn.md#function-discrete_integral): Discrete integral (left Riemann sum).
+- [`fn.discrete_integral_trapz`](./fn.md#function-discrete_integral_trapz): Discrete integral (trapezoidal rule).
+- [`fn.install`](./fn.md#function-install): Patch VDR to be aware of functional remainders.
+- [`fn.is_functional`](./fn.md#function-is_functional): Check if a VDR object has a functional remainder.
+- [`fn.make_constant_fn`](./fn.md#function-make_constant_fn): Functional remainder that always returns the same value.
+- [`fn.make_iterative_fn`](./fn.md#function-make_iterative_fn): General iterative function: apply step N times to start.
+- [`fn.make_newton_fn`](./fn.md#function-make_newton_fn): Functional remainder from Newton-Raphson iteration.
+- [`fn.make_series_fn`](./fn.md#function-make_series_fn): Functional remainder from a series.
+- [`fn.resolve`](./fn.md#function-resolve): Resolve a VDR object by expanding any functional remainder.
+- [`fn.resolve_recursive`](./fn.md#function-resolve_recursive): Resolve all functional remainders in a VDR tree, recursively.
+- [`fn.uninstall`](./fn.md#function-uninstall): Restore original VDR behavior.
+- [`fn.vdr_fn`](./fn.md#function-vdr_fn): Decorator for creating named VDR remainder functions.
+- [`linalg.parse_vdr`](./linalg.md#function-parse_vdr): Parse bracket notation into a VDR object.
+- [`linalg.vdr_from_dict`](./linalg.md#function-vdr_from_dict): Deserialize VDR from a JSON-compatible dict.
+- [`linalg.vdr_to_dict`](./linalg.md#function-vdr_to_dict): Serialize VDR to a JSON-compatible dict.
+- [`linalg.vdr_to_latex`](./linalg.md#function-vdr_to_latex): Export VDR to LaTeX notation.
+- [`chaos.arnold_cat`](./math.chaos.md#function-arnold_cat): Arnold cat map on the torus [0,1) x [0,1).
+- [`chaos.bernoulli_shift`](./math.chaos.md#function-bernoulli_shift): Bernoulli shift (doubling map): B(x) = 2x mod 1.
+- [`chaos.detect_period`](./math.chaos.md#function-detect_period): Detect period in an exact orbit.
+- [`chaos.detect_period_2d`](./math.chaos.md#function-detect_period_2d): Detect period in a 2D exact orbit.
+- [`chaos.iterate_map`](./math.chaos.md#function-iterate_map): Iterate a map and collect the orbit.
+- [`chaos.iterate_map_2d`](./math.chaos.md#function-iterate_map_2d): Iterate a 2D map and collect the orbit.
+- [`chaos.logistic_map`](./math.chaos.md#function-logistic_map): Logistic map: L(x) = r * x * (1 - x).
+- [`chaos.lyapunov_product`](./math.chaos.md#function-lyapunov_product): Product of derivative magnitudes along an orbit.
+- [`chaos.tent_map`](./math.chaos.md#function-tent_map): Tent map T(x) on [0, 1].
+- [`coding_theory.compute_checksum`](./math.coding_theory.md#function-compute_checksum): Simple polynomial checksum over GF(p).
+- [`coding_theory.gf_add`](./math.coding_theory.md#function-gf_add): Addition in GF(p): (a + b) mod p.
+- [`coding_theory.gf_div`](./math.coding_theory.md#function-gf_div): Division in GF(p): a * b^(-1) mod p.
+- [`coding_theory.gf_inv`](./math.coding_theory.md#function-gf_inv): Multiplicative inverse in GF(p): a^(-1) mod p.
+- [`coding_theory.gf_mul`](./math.coding_theory.md#function-gf_mul): Multiplication in GF(p): (a * b) mod p.
+- [`coding_theory.gf_poly_eval`](./math.coding_theory.md#function-gf_poly_eval): Evaluate polynomial over GF(p) using Horner's method.
+- [`coding_theory.gf_pow`](./math.coding_theory.md#function-gf_pow): Exponentiation in GF(p): a^n mod p.
+- [`coding_theory.gf_sub`](./math.coding_theory.md#function-gf_sub): Subtraction in GF(p): (a - b) mod p.
+- [`coding_theory.hamming74_correct`](./math.coding_theory.md#function-hamming74_correct): Correct single-bit error in received 7-bit Hamming(7,4) codeword.
+- [`coding_theory.hamming74_encode`](./math.coding_theory.md#function-hamming74_encode): Encode 4-bit data word to 7-bit Hamming(7,4) codeword.
+- [`coding_theory.hamming74_syndrome`](./math.coding_theory.md#function-hamming74_syndrome): Compute syndrome of received 7-bit word.
+- [`coding_theory.hamming_distance`](./math.coding_theory.md#function-hamming_distance): Hamming distance between two bit vectors.
+- [`coding_theory.hamming_weight`](./math.coding_theory.md#function-hamming_weight): Hamming weight of a bit vector.
+- [`coding_theory.min_distance`](./math.coding_theory.md#function-min_distance): Minimum Hamming distance of a code.
+- [`coding_theory.repetition_decode`](./math.coding_theory.md#function-repetition_decode): Majority-vote decoding for repetition code.
+- [`combinatorics.bell`](./math.combinatorics.md#function-bell): Bell number B(n): total number of partitions of n elements.
+- [`combinatorics.binom`](./math.combinatorics.md#function-binom): Binomial coefficient C(n, k).
+- [`combinatorics.catalan`](./math.combinatorics.md#function-catalan): Catalan number C_n = C(2n,n) / (n+1).
+- [`combinatorics.catalan_gf`](./math.combinatorics.md#function-catalan_gf): Catalan generating function partial sum:
+- [`combinatorics.derangement`](./math.combinatorics.md#function-derangement): Derangement D(n): number of permutations with no fixed points.
+- [`combinatorics.factorial`](./math.combinatorics.md#function-factorial): n! as VDR.
+- [`combinatorics.falling_factorial`](./math.combinatorics.md#function-falling_factorial): Falling factorial: n * (n-1) * ... * (n-k+1).
+- [`combinatorics.multinomial`](./math.combinatorics.md#function-multinomial): Multinomial coefficient: n! / (k1! * k2! * ... * km!)
+- [`combinatorics.stirling2`](./math.combinatorics.md#function-stirling2): Stirling number of the second kind S(n, k).
+- [`continued_fractions.best_rational`](./math.continued_fractions.md#function-best_rational): Best rational approximation to x with denominator <= max_denom.
+- [`continued_fractions.convergents_from_cf`](./math.continued_fractions.md#function-convergents_from_cf): Compute all convergents from CF coefficients.
+- [`continued_fractions.from_cf`](./math.continued_fractions.md#function-from_cf): Convert continued fraction coefficients to VDR rational.
+- [`continued_fractions.sb_path`](./math.continued_fractions.md#function-sb_path): Stern-Brocot path for fraction p/q.
+- [`continued_fractions.sqrt_cf_period`](./math.continued_fractions.md#function-sqrt_cf_period): Continued fraction expansion of sqrt(n) for non-square n.
+- [`continued_fractions.to_cf`](./math.continued_fractions.md#function-to_cf): Convert fraction v/d to continued fraction coefficients.
+- [`control.cayley_hamilton_verify`](./math.control.md#function-cayley_hamilton_verify): Verify Cayley-Hamilton theorem: p(A) = 0 where p is characteristic polynomial.
+- [`control.char_poly`](./math.control.md#function-char_poly): Characteristic polynomial of a square matrix.
+- [`control.controllability_gramian`](./math.control.md#function-controllability_gramian): Discrete-time controllability Gramian.
+- [`control.controllability_matrix`](./math.control.md#function-controllability_matrix): Controllability matrix: [B, AB, A^2B, ..., A^(n-1)B].
+- [`control.is_controllable`](./math.control.md#function-is_controllable): Test controllability: controllability matrix has full rank.
+- [`control.is_observable`](./math.control.md#function-is_observable): Test observability: observability matrix has full rank.
+- [`control.mat_pow`](./math.control.md#function-mat_pow): Exact matrix power via repeated squaring.
+- [`control.observability_matrix`](./math.control.md#function-observability_matrix): Observability matrix: [C; CA; CA^2; ...; CA^(n-1)].
+- [`control.state_evolve`](./math.control.md#function-state_evolve): Discrete-time state-space evolution.
+- [`control.transfer_function_eval`](./math.control.md#function-transfer_function_eval): Evaluate transfer function H(s) = N(s) / D(s).
+- [`cryptographic.baby_giant`](./math.cryptographic.md#function-baby_giant): Baby-step giant-step discrete logarithm.
+- [`cryptographic.chinese_remainder`](./math.cryptographic.md#function-chinese_remainder): Chinese Remainder Theorem reconstruction.
+- [`cryptographic.euler_totient`](./math.cryptographic.md#function-euler_totient): Euler's totient function phi(n).
+- [`cryptographic.extended_gcd`](./math.cryptographic.md#function-extended_gcd): Extended Euclidean algorithm.
+- [`cryptographic.is_prime`](./math.cryptographic.md#function-is_prime): Simple primality test.
+- [`cryptographic.miller_rabin_deterministic`](./math.cryptographic.md#function-miller_rabin_deterministic): Deterministic Miller-Rabin for n < 3,317,044,064,679,887,385,961,981.
+- [`cryptographic.mod_exp`](./math.cryptographic.md#function-mod_exp): Fast modular exponentiation: base^exp mod mod.
+- [`cryptographic.mod_inverse`](./math.cryptographic.md#function-mod_inverse): Modular multiplicative inverse: a^(-1) mod m.
+- [`cryptographic.rsa_decrypt`](./math.cryptographic.md#function-rsa_decrypt): RSA decryption: m = c^d mod n.
+- [`cryptographic.rsa_encrypt`](./math.cryptographic.md#function-rsa_encrypt): RSA encryption: c = m^e mod n.
+- [`cryptographic.rsa_keygen`](./math.cryptographic.md#function-rsa_keygen): RSA key generation.
+- [`differential_eq.euler_solve`](./math.differential_eq.md#function-euler_solve): Euler method ODE solver.
+- [`differential_eq.euler_step`](./math.differential_eq.md#function-euler_step): One Euler step: y_{n+1} = y_n + h * f(x_n, y_n).
+- [`differential_eq.lotka_volterra_solve`](./math.differential_eq.md#function-lotka_volterra_solve): Solve Lotka-Volterra system for n_steps Euler steps.
+- [`differential_eq.lotka_volterra_step`](./math.differential_eq.md#function-lotka_volterra_step): One Euler step of the Lotka-Volterra predator-prey system.
+- [`differential_eq.mat_exp`](./math.differential_eq.md#function-mat_exp): Truncated matrix exponential: sum_{k=0}^{terms} (tA)^k / k!
+- [`differential_eq.picard_exp_coefficients`](./math.differential_eq.md#function-picard_exp_coefficients): Picard iteration for dy/dx = y, y(0) = 1.
+- [`differential_eq.picard_iterate`](./math.differential_eq.md#function-picard_iterate): Picard iteration for successive approximations.
+- [`differential_eq.rk4_solve`](./math.differential_eq.md#function-rk4_solve): RK4 ODE solver.
+- [`differential_eq.rk4_step`](./math.differential_eq.md#function-rk4_step): One RK4 step.
+- [`game_theory.cournot_duopoly`](./math.game_theory.md#function-cournot_duopoly): Cournot duopoly equilibrium.
+- [`game_theory.dominated_elimination`](./math.game_theory.md#function-dominated_elimination): Iterated elimination of strictly dominated strategies.
+- [`game_theory.minimax_2x2`](./math.game_theory.md#function-minimax_2x2): Solve 2x2 zero-sum game for minimax strategies.
+- [`game_theory.nash_2x2`](./math.game_theory.md#function-nash_2x2): Find Nash equilibrium of a 2x2 bimatrix game.
+- [`game_theory.shapley_values`](./math.game_theory.md#function-shapley_values): Shapley values for an n-player cooperative game.
+- [`geometry.barycentric`](./math.geometry.md#function-barycentric): Barycentric coordinates of point p with respect to triangle (a, b, c).
+- [`geometry.circumcenter`](./math.geometry.md#function-circumcenter): Circumcenter of triangle (a, b, c).
+- [`geometry.collinear`](./math.geometry.md#function-collinear): Test whether three points are collinear.
+- [`geometry.dist_sq`](./math.geometry.md#function-dist_sq): Squared Euclidean distance between two points.
+- [`geometry.line_intersect`](./math.geometry.md#function-line_intersect): Intersection of lines through (p1,p2) and (p3,p4).
+- [`geometry.midpoint`](./math.geometry.md#function-midpoint): Midpoint of two points.
+- [`geometry.point_in_triangle`](./math.geometry.md#function-point_in_triangle): Test whether point p is inside triangle (a, b, c).
+- [`geometry.polygon_area`](./math.geometry.md#function-polygon_area): Unsigned area of polygon via Shoelace formula.
+- [`geometry.shoelace_signed`](./math.geometry.md#function-shoelace_signed): Signed area of polygon via Shoelace formula.
+- [`graph.bellman_ford`](./math.graph.md#function-bellman_ford): Bellman-Ford shortest path with exact rational weights.
+- [`graph.dijkstra`](./math.graph.md#function-dijkstra): Dijkstra's shortest path with exact rational weights.
+- [`graph.floyd_warshall`](./math.graph.md#function-floyd_warshall): Floyd-Warshall all-pairs shortest paths.
+- [`graph.max_flow`](./math.graph.md#function-max_flow): Ford-Fulkerson max flow with BFS augmenting paths (Edmonds-Karp).
+- [`graph.pagerank`](./math.graph.md#function-pagerank): PageRank via exact linear system solve.
+- [`graph.prim_mst`](./math.graph.md#function-prim_mst): Prim's minimum spanning tree with exact rational weights.
+- [`number_theory.convergents`](./math.number_theory.md#function-convergents): Compute convergents from continued fraction coefficients.
+- [`number_theory.e_cf`](./math.number_theory.md#function-e_cf): First n continued fraction coefficients of e.
+- [`number_theory.egyptian_fractions`](./math.number_theory.md#function-egyptian_fractions): Decompose v/d into sum of unit fractions (greedy algorithm).
+- [`number_theory.euler_totient`](./math.number_theory.md#function-euler_totient): Euler's totient function phi(n).
+- [`number_theory.factorial`](./math.number_theory.md#function-factorial): n! as VDR. Exact.
+- [`number_theory.farey`](./math.number_theory.md#function-farey): Farey sequence F_n: all fractions p/q with 0 <= p/q <= 1, q <= n,
+- [`number_theory.harmonic`](./math.number_theory.md#function-harmonic): Harmonic number H_n = 1 + 1/2 + 1/3 + ... + 1/n.
+- [`number_theory.stern_brocot`](./math.number_theory.md#function-stern_brocot): Generate Stern-Brocot tree fractions at given depth.
+- [`number_theory.vdr_gcd`](./math.number_theory.md#function-vdr_gcd): GCD of two integer VDR values.
+- [`number_theory.vdr_lcm`](./math.number_theory.md#function-vdr_lcm): LCM of two integer VDR values.
+- [`number_theory.vdr_mod`](./math.number_theory.md#function-vdr_mod): Modular reduction: a mod m.
+- [`number_theory.vdr_pow`](./math.number_theory.md#function-vdr_pow): Exact integer power: base^exp.
+- [`optimization.bisection`](./math.optimization.md#function-bisection): Bisection method for root finding.
+- [`optimization.golden_section`](./math.optimization.md#function-golden_section): Golden section search for unimodal function minimum.
+- [`optimization.gradient_descent_2d`](./math.optimization.md#function-gradient_descent_2d): Gradient descent in 2D.
+- [`optimization.newton_optimize`](./math.optimization.md#function-newton_optimize): Newton's method for optimization: find x where f'(x) = 0.
+- [`optimization.newton_root`](./math.optimization.md#function-newton_root): Newton's method for root finding: find x where f(x) = 0.
+- [`optimization.simplex_2d`](./math.optimization.md#function-simplex_2d): Exact rational simplex method for 2D linear programming.
+- [`polynomial.char_poly_2x2`](./math.polynomial.md#function-char_poly_2x2): Characteristic polynomial of a 2x2 matrix.
+- [`polynomial.definite_integral`](./math.polynomial.md#function-definite_integral): Exact definite integral of polynomial from a to b.
+- [`polynomial.lagrange_interpolate`](./math.polynomial.md#function-lagrange_interpolate): Lagrange interpolation through given points.
+- [`polynomial.poly_add`](./math.polynomial.md#function-poly_add): Add two polynomials.
+- [`polynomial.poly_degree`](./math.polynomial.md#function-poly_degree): Degree of polynomial. Zero polynomial has degree -1.
+- [`polynomial.poly_derivative`](./math.polynomial.md#function-poly_derivative): Symbolic differentiation of polynomial.
+- [`polynomial.poly_divmod`](./math.polynomial.md#function-poly_divmod): Polynomial division with remainder.
+- [`polynomial.poly_eval`](./math.polynomial.md#function-poly_eval): Evaluate polynomial at x using Horner's method.
+- [`polynomial.poly_gcd`](./math.polynomial.md#function-poly_gcd): Polynomial GCD via Euclidean algorithm.
+- [`polynomial.poly_integral`](./math.polynomial.md#function-poly_integral): Symbolic antiderivative of polynomial.
+- [`polynomial.poly_mul`](./math.polynomial.md#function-poly_mul): Multiply two polynomials.
+- [`polynomial.poly_neg`](./math.polynomial.md#function-poly_neg): Negate polynomial.
+- [`polynomial.poly_scale`](./math.polynomial.md#function-poly_scale): Multiply polynomial by scalar.
+- [`polynomial.poly_str`](./math.polynomial.md#function-poly_str): Pretty-print polynomial as string.
+- [`polynomial.poly_sub`](./math.polynomial.md#function-poly_sub): Subtract two polynomials.
+- [`polynomial.poly_trim`](./math.polynomial.md#function-poly_trim): Remove trailing zero coefficients.
+- [`polynomial.rational_roots`](./math.polynomial.md#function-rational_roots): Find all rational roots of polynomial via rational root theorem.
+- [`probability.bayes_sequential`](./math.probability.md#function-bayes_sequential): Sequential Bayesian updating through multiple observations.
+- [`probability.bayes_update`](./math.probability.md#function-bayes_update): Single Bayesian update.
+- [`probability.binom_pmf`](./math.probability.md#function-binom_pmf): Binomial PMF: P(X = k) for X ~ Binomial(n, p).
+- [`probability.binom_pmf_full`](./math.probability.md#function-binom_pmf_full): Full binomial PMF vector for X ~ Binomial(n, p).
+- [`probability.expected_value`](./math.probability.md#function-expected_value): Expected value E[X] = sum(xi * pi).
+- [`probability.gamblers_ruin`](./math.probability.md#function-gamblers_ruin): Gambler's ruin probability for fair game.
+- [`probability.markov_power`](./math.probability.md#function-markov_power): Evolve Markov chain for given number of steps.
+- [`probability.markov_steady_state`](./math.probability.md#function-markov_steady_state): Steady-state distribution of a Markov chain.
+- [`probability.markov_step`](./math.probability.md#function-markov_step): One step of Markov chain: state * transition.
+- [`probability.variance`](./math.probability.md#function-variance): Variance Var(X) = E[X^2] - E[X]^2.
+- [`sequences.bernoulli`](./math.sequences.md#function-bernoulli): Bernoulli number B(n).
+- [`sequences.bernoulli_seq`](./math.sequences.md#function-bernoulli_seq): Bernoulli numbers B(0) through B(n).
+- [`sequences.catalan_seq`](./math.sequences.md#function-catalan_seq): Catalan numbers C(0) through C(n).
+- [`sequences.fibonacci`](./math.sequences.md#function-fibonacci): Fibonacci number F(n).
+- [`sequences.fibonacci_seq`](./math.sequences.md#function-fibonacci_seq): Fibonacci sequence F(0) through F(n).
+- [`sequences.lucas`](./math.sequences.md#function-lucas): Lucas number L(n).
+- [`sequences.lucas_seq`](./math.sequences.md#function-lucas_seq): Lucas sequence L(0) through L(n).
+- [`sequences.rational_recurrence`](./math.sequences.md#function-rational_recurrence): General linear recurrence with VDR coefficients.
+- [`sequences.tribonacci`](./math.sequences.md#function-tribonacci): Tribonacci number T(n).
+- [`sequences.tribonacci_seq`](./math.sequences.md#function-tribonacci_seq): Tribonacci sequence T(0) through T(n).
+- [`symbolic.partial_fractions_simple`](./math.symbolic.md#function-partial_fractions_simple): Partial fraction decomposition for simple (non-repeated) linear roots.
+- [`symbolic.power_sum`](./math.symbolic.md#function-power_sum): Power sum: 1^k + 2^k + ... + n^k.
+- [`symbolic.ratfun_add`](./math.symbolic.md#function-ratfun_add): Add two rational functions.
+- [`symbolic.ratfun_eval`](./math.symbolic.md#function-ratfun_eval): Evaluate rational function at x.
+- [`symbolic.ratfun_mul`](./math.symbolic.md#function-ratfun_mul): Multiply two rational functions.
+- [`topology.betti_numbers`](./math.topology.md#function-betti_numbers): Compute Betti numbers from a sequence of boundary matrices.
+- [`topology.boundary_matrix`](./math.topology.md#function-boundary_matrix): Construct boundary operator matrix d_k.
+- [`topology.euler_characteristic`](./math.topology.md#function-euler_characteristic): Euler characteristic from Betti numbers.
+- [`topology.simplicial_complex_boundaries`](./math.topology.md#function-simplicial_complex_boundaries): Build all boundary matrices for a simplicial complex.
+- [`topology.verify_d_squared_zero`](./math.topology.md#function-verify_d_squared_zero): Verify d∘d = 0 (fundamental property of boundary operators).
+- [`transcendental.arcsin_series`](./math.transcendental.md#function-arcsin_series): Taylor series for arcsin(x) using central binomial coefficients.
+- [`transcendental.arctan_series`](./math.transcendental.md#function-arctan_series): Taylor series for arctan(x) = x - x^3/3 + x^5/5 - ...
+- [`transcendental.borwein_coefficients`](./math.transcendental.md#function-borwein_coefficients): Compute Borwein acceleration coefficients d_k for k=0..n.
+- [`transcendental.borwein_eta`](./math.transcendental.md#function-borwein_eta): Dirichlet eta function via Borwein acceleration.
+- [`transcendental.borwein_zeta`](./math.transcendental.md#function-borwein_zeta): Riemann zeta function via Borwein acceleration.
+- [`transcendental.clausen_2`](./math.transcendental.md#function-clausen_2): Clausen function Cl_2(x) = -integral_0^x ln|2 sin(t/2)| dt
+- [`transcendental.clausen_3`](./math.transcendental.md#function-clausen_3): Clausen function Cl_3(x) = sum_{n=1}^{terms} cos(nx) / n^3.
+- [`transcendental.cos_series`](./math.transcendental.md#function-cos_series): Taylor series for cos(x) = 1 - x^2/2! + x^4/4! - ...
+- [`transcendental.elliptic_e`](./math.transcendental.md#function-elliptic_e): Complete elliptic integral of the second kind E(k).
+- [`transcendental.elliptic_k`](./math.transcendental.md#function-elliptic_k): Complete elliptic integral of the first kind K(k).
+- [`transcendental.exp_series`](./math.transcendental.md#function-exp_series): Taylor series for exp(x) = sum x^n / n!
+- [`transcendental.hypergeometric_2f1`](./math.transcendental.md#function-hypergeometric_2f1): Gauss hypergeometric function 2F1(a, b; c; z).
+- [`transcendental.ln_series`](./math.transcendental.md#function-ln_series): Natural logarithm via ln(1+u) = u - u^2/2 + u^3/3 - ...
+- [`transcendental.pi_machin`](./math.transcendental.md#function-pi_machin): Compute pi via Machin's formula:
+- [`transcendental.sin_series`](./math.transcendental.md#function-sin_series): Taylor series for sin(x) = x - x^3/3! + x^5/5! - ...
+- [`transcendental.sqrt_newton`](./math.transcendental.md#function-sqrt_newton): Newton-Raphson square root of n.
+- [`tropical.gram_matrix`](./math.tropical.md#function-gram_matrix): Gram matrix: G[i][j] = vectors[i] . vectors[j].
+- [`tropical.gram_schmidt_exact`](./math.tropical.md#function-gram_schmidt_exact): Exact Gram-Schmidt orthogonalization.
+- [`tropical.lll_reduce`](./math.tropical.md#function-lll_reduce): LLL lattice basis reduction with exact VDR arithmetic.
+- [`tropical.lovasz_condition`](./math.tropical.md#function-lovasz_condition): Check Lovasz condition at index i:
+- [`tropical.size_reduce`](./math.tropical.md#function-size_reduce): Size reduction step: ensure |mu[i][j]| <= 1/2.
+- [`tropical.trop_add`](./math.tropical.md#function-trop_add): Tropical addition: min(a, b).
+- [`tropical.trop_det`](./math.tropical.md#function-trop_det): Tropical determinant: minimum weight perfect matching.
+- [`tropical.trop_mat_mul`](./math.tropical.md#function-trop_mat_mul): Tropical matrix multiplication (min-plus).
+- [`tropical.trop_mul`](./math.tropical.md#function-trop_mul): Tropical multiplication: a + b (ordinary addition).
+- [`wavelets.energy`](./math.wavelets.md#function-energy): Signal energy: sum |x[n]|^2.
+- [`wavelets.haar_forward`](./math.wavelets.md#function-haar_forward): One-level Haar forward transform.
+- [`wavelets.haar_inverse`](./math.wavelets.md#function-haar_inverse): One-level Haar inverse transform.
+- [`wavelets.haar_multilevel`](./math.wavelets.md#function-haar_multilevel): Multi-level Haar decomposition.
+- [`wavelets.haar_reconstruct_multilevel`](./math.wavelets.md#function-haar_reconstruct_multilevel): Reconstruct signal from multi-level Haar decomposition.
+- [`wavelets.parseval_verify`](./math.wavelets.md#function-parseval_verify): Verify Parseval energy identity for Haar transform.
+- [`wavelets.threshold_hard`](./math.wavelets.md#function-threshold_hard): Hard thresholding for wavelet denoising.
+- [`attention.apply_boolean_mask`](./ml.attention.md#function-apply_boolean_mask): Apply boolean mask to attention scores.
+- [`attention.attention_mix`](./ml.attention.md#function-attention_mix): Apply attention weights to value vectors.
+- [`attention.attention_scores`](./ml.attention.md#function-attention_scores): Compute raw attention score matrix: S[i,j] = Q[i] . K[j].
+- [`attention.attention_weights`](./ml.attention.md#function-attention_weights): Convert scores to attention weights via softmax.
+- [`attention.causal_mask`](./ml.attention.md#function-causal_mask): Lower-triangular boolean mask for causal (autoregressive) attention.
+- [`attention.multi_head_concat`](./ml.attention.md#function-multi_head_concat): Concatenate attention head outputs back into full vectors.
+- [`attention.multi_head_split`](./ml.attention.md#function-multi_head_split): Split vectors into multiple attention heads.
+- [`attention.self_attention`](./ml.attention.md#function-self_attention): Full self-attention pipeline.
+- [`attention.weighted_sum`](./ml.attention.md#function-weighted_sum): Weighted sum of value vectors: out = sum_j w_j * V[j].
+- [`autodiff.dot_nodes`](./ml.autodiff.md#function-dot_nodes): Dot product of two Node sequences.
+- [`autodiff.ensure_node`](./ml.autodiff.md#function-ensure_node): Convert scalar to Node if needed. Projects to basis frame.
+- [`autodiff.grad_of_vec`](./ml.autodiff.md#function-grad_of_vec): Extract gradients from Node list as Vec.
+- [`autodiff.linear_node`](./ml.autodiff.md#function-linear_node): Linear combination: sum(w_i * x_i) + bias.
+- [`autodiff.mean_nodes`](./ml.autodiff.md#function-mean_nodes): Mean of a sequence of Nodes.
+- [`autodiff.mse_loss`](./ml.autodiff.md#function-mse_loss): Mean squared error loss as autodiff graph.
+- [`autodiff.relu`](./ml.autodiff.md#function-relu): ReLU as autodiff Node.
+- [`autodiff.sum_nodes`](./ml.autodiff.md#function-sum_nodes): Sum a sequence of Nodes.
+- [`autodiff.value_of_vec`](./ml.autodiff.md#function-value_of_vec): Extract values from Node list as Vec.
+- [`autodiff.zero_grads`](./ml.autodiff.md#function-zero_grads): Reset gradients of all nodes to basis-frame zero.
+- [`checkpoint.load_model_parameters`](./ml.checkpoint.md#function-load_model_parameters): Load saved parameters into model.
+- [`checkpoint.load_parameters`](./ml.checkpoint.md#function-load_parameters): Load parameter values from saved dict.
+- [`checkpoint.save_model`](./ml.checkpoint.md#function-save_model): Save entire model state.
+- [`checkpoint.save_parameters`](./ml.checkpoint.md#function-save_parameters): Save list of parameters to JSON-serializable dict.
+- [`datasets.batchify_windows`](./ml.datasets.md#function-batchify_windows): Convert sliding windows to training pairs with one-hot targets.
+- [`datasets.build_vocab`](./ml.datasets.md#function-build_vocab): Build vocabulary mapping from unique tokens.
+- [`datasets.decode_tokens`](./ml.datasets.md#function-decode_tokens): Decode integer ids to token strings.
+- [`datasets.encode_tokens`](./ml.datasets.md#function-encode_tokens): Encode token strings to integer ids.
+- [`datasets.invert_vocab`](./ml.datasets.md#function-invert_vocab): Invert vocabulary: {token: id} -> {id: token}.
+- [`datasets.one_hot`](./ml.datasets.md#function-one_hot): One-hot vector: 1 at index, 0 elsewhere.
+- [`datasets.sliding_windows`](./ml.datasets.md#function-sliding_windows): Create sliding window training examples from token id sequence.
+- [`datasets.tiny_text_dataset`](./ml.datasets.md#function-tiny_text_dataset): Build a tiny text dataset from a string.
+- [`exp.exp_neg`](./ml.exp.md#function-exp_neg): Compute exp(-|x|), ensuring positive result.
+- [`exp.exp_range_reduced`](./ml.exp.md#function-exp_range_reduced): Range-reduced exponential for large |x|.
+- [`exp.exp_series`](./ml.exp.md#function-exp_series): Taylor series for exp(x) = sum_{k=0}^{depth} x^k / k!
+- [`init.constant_mat`](./ml.init.md#function-constant_mat): Constant-value matrix.
+- [`init.constant_vec`](./ml.init.md#function-constant_vec): Constant-value vector.
+- [`init.rational_uniform_mat`](./ml.init.md#function-rational_uniform_mat): Random Mat with entries uniformly distributed in [lo, hi).
+- [`init.rational_uniform_vec`](./ml.init.md#function-rational_uniform_vec): Random Vec with entries uniformly distributed in [lo, hi).
+- [`init.xavier_like_mat`](./ml.init.md#function-xavier_like_mat): Xavier-like initialization with rational bounds.
+- [`init.zero_bias`](./ml.init.md#function-zero_bias): Zero bias vector.
+- [`logarithm.log1p_series`](./ml.logarithm.md#function-log1p_series): ln(1 + x) via Taylor series: x - x^2/2 + x^3/3 - ...
+- [`logarithm.log_ratio_near_one`](./ml.logarithm.md#function-log_ratio_near_one): ln(num/den) when num ≈ den, avoiding catastrophic cancellation.
+- [`logarithm.log_series`](./ml.logarithm.md#function-log_series): Natural logarithm via arctanh series.
+- [`losses.cross_entropy_binary`](./ml.losses.md#function-cross_entropy_binary): Binary cross-entropy loss: -[y*ln(p) + (1-y)*ln(1-p)].
+- [`losses.hinge_binary`](./ml.losses.md#function-hinge_binary): Binary hinge loss: max(0, 1 - label * score).
+- [`losses.l1`](./ml.losses.md#function-l1): Mean absolute error: (1/n) * sum |pred_i - target_i|.
+- [`losses.l1_grad`](./ml.losses.md#function-l1_grad): Subgradient of L1 loss with respect to pred.
+- [`losses.mse`](./ml.losses.md#function-mse): Mean squared error: (1/n) * sum (pred_i - target_i)^2.
+- [`losses.mse_grad`](./ml.losses.md#function-mse_grad): Gradient of MSE with respect to pred.
+- [`metrics.argmax_vec`](./ml.metrics.md#function-argmax_vec): Index of maximum element in Vec.
+- [`metrics.denominator_complexity_mat`](./ml.metrics.md#function-denominator_complexity_mat): Denominator complexity of a Mat.
+- [`metrics.denominator_complexity_vec`](./ml.metrics.md#function-denominator_complexity_vec): Denominator complexity of a Vec.
+- [`metrics.exact_accuracy`](./ml.metrics.md#function-exact_accuracy): Classification accuracy as exact rational.
+- [`metrics.mean_loss`](./ml.metrics.md#function-mean_loss): Mean of a list of loss values.
+- [`metrics.parameter_denominator_complexity`](./ml.metrics.md#function-parameter_denominator_complexity): Aggregate denominator complexity across all model parameters.
+- [`metrics.total_parameters`](./ml.metrics.md#function-total_parameters): Count total number of scalar parameters.
+- [`nn.relu_prime_scalar`](./ml.nn.md#function-relu_prime_scalar): ReLU derivative on a single VDR.
+- [`nn.relu_scalar`](./ml.nn.md#function-relu_scalar): ReLU on a single VDR: max(0, x).
+- [`sampling.argmax_sample`](./ml.sampling.md#function-argmax_sample): Deterministic argmax sampling (greedy decoding).
+- [`sampling.categorical_sample`](./ml.sampling.md#function-categorical_sample): Sample from a categorical distribution using exact CDF comparison.
+- [`sampling.cdf_from_probs`](./ml.sampling.md#function-cdf_from_probs): Cumulative distribution function from probability vector.
+- [`sampling.nucleus_probs`](./ml.sampling.md#function-nucleus_probs): Nucleus (top-p) sampling: keep smallest set of tokens whose
+- [`sampling.temperature_scale`](./ml.sampling.md#function-temperature_scale): Scale logits by temperature before softmax.
+- [`sampling.top_k_probs`](./ml.sampling.md#function-top_k_probs): Top-k filtering: keep only the k largest probabilities, renormalize.
+- [`softmax.logsumexp`](./ml.softmax.md#function-logsumexp): Exact log-sum-exp: log(sum(exp(x_i))).
+- [`softmax.softmax`](./ml.softmax.md#function-softmax): Exact softmax with max-subtraction for numerical stability.
+- [`softmax.softmax_matrix_rows`](./ml.softmax.md#function-softmax_matrix_rows): Apply softmax independently to each row of a matrix.
+- [`softmax.softmax_surrogate_square`](./ml.softmax.md#function-softmax_surrogate_square): Polynomial softmax surrogate using squared values.
+- [`tensor.batched_matvec`](./ml.tensor.md#function-batched_matvec): Batched matrix-vector product.
+- [`tensor.masked_fill_rows`](./ml.tensor.md#function-masked_fill_rows): Apply element-wise mask to rows of Vec.
+- [`tensor.reduce_sum_rows`](./ml.tensor.md#function-reduce_sum_rows): Element-wise sum across a list of Vec.
+- [`tensor.rowwise_add_bias`](./ml.tensor.md#function-rowwise_add_bias): Add bias vector to each row.
+- [`tensor.stack_vecs`](./ml.tensor.md#function-stack_vecs): Stack list of Vec into a Mat (each Vec becomes a row).
+- [`tensor.unstack_vecs`](./ml.tensor.md#function-unstack_vecs): Unstack Mat into list of row Vec.
+- [`trainer.evaluate_classification`](./ml.trainer.md#function-evaluate_classification): Evaluate classification accuracy on dataset.
+- [`trainer.evaluate_epoch`](./ml.trainer.md#function-evaluate_epoch): Evaluate model on dataset without updating parameters.
+- [`trainer.predict_class`](./ml.trainer.md#function-predict_class): Predict class label by argmax of model output.
+- [`trainer.train_epoch`](./ml.trainer.md#function-train_epoch): Train on entire dataset for one epoch.
+- [`trainer.train_step`](./ml.trainer.md#function-train_step): One training step: forward, loss, backward, update.
+- [`crystallography.group_multiplication_table`](./physics.crystallography.md#function-group_multiplication_table): Build group multiplication table.
+- [`crystallography.point_group_matrix`](./physics.crystallography.md#function-point_group_matrix): Get 3x3 rotation/reflection matrix for named point group operation.
+- [`crystallography.structure_factor`](./physics.crystallography.md#function-structure_factor): Structure factor F(hkl) = sum f_j * exp(2*pi*i*(h*xj + k*yj + l*zj)).
+- [`crystallography.verify_group_closure`](./physics.crystallography.md#function-verify_group_closure): Verify that a set of matrices is closed under multiplication.
+- [`geodesy.coordinate_transform`](./physics.geodesy.md#function-coordinate_transform): General affine coordinate transformation.
+- [`geodesy.helmert_forward`](./physics.geodesy.md#function-helmert_forward): Helmert 7-parameter forward transformation.
+- [`geodesy.helmert_inverse`](./physics.geodesy.md#function-helmert_inverse): Helmert 7-parameter inverse transformation.
+- [`geodesy.helmert_roundtrip_verify`](./physics.geodesy.md#function-helmert_roundtrip_verify): Verify Helmert roundtrip: inverse(forward(X)) == X.
+- [`geodesy.misclosure`](./physics.geodesy.md#function-misclosure): Survey misclosure: sum of leg vectors.
+- [`geodesy.rotation_matrix_small_angle`](./physics.geodesy.md#function-rotation_matrix_small_angle): Small-angle rotation matrix for Helmert transformation.
+- [`geodesy.weighted_average`](./physics.geodesy.md#function-weighted_average): Weighted average with exact rational weights.
+- [`optics.beam_parameter`](./physics.optics.md#function-beam_parameter): Transform complex beam parameter through ABCD matrix.
+- [`optics.curved_mirror`](./physics.optics.md#function-curved_mirror): ABCD matrix for curved mirror with radius of curvature R.
+- [`optics.flat_mirror`](./physics.optics.md#function-flat_mirror): ABCD matrix for flat mirror (reflection).
+- [`optics.free_space`](./physics.optics.md#function-free_space): ABCD matrix for free-space propagation of distance d.
+- [`optics.interface`](./physics.optics.md#function-interface): ABCD matrix for refraction at a curved interface.
+- [`optics.matrix_power`](./physics.optics.md#function-matrix_power): Exact matrix power via repeated squaring.
+- [`optics.resonator_stability`](./physics.optics.md#function-resonator_stability): Resonator stability criterion.
+- [`optics.system_matrix`](./physics.optics.md#function-system_matrix): System ABCD matrix from sequence of optical elements.
+- [`optics.thick_lens`](./physics.optics.md#function-thick_lens): ABCD matrix for thick lens.
+- [`optics.thin_lens`](./physics.optics.md#function-thin_lens): ABCD matrix for thin lens of focal length f.
+- [`optics.verify_symplecticity`](./physics.optics.md#function-verify_symplecticity): Verify det(M) == 1 exactly (symplecticity / energy conservation).
+- [`orbital.kepler_newton`](./physics.orbital.md#function-kepler_newton): Solve Kepler's equation M = E - e*sin(E) via Newton iteration.
+- [`orbital.kepler_position`](./physics.orbital.md#function-kepler_position): Position in orbital plane from eccentric anomaly.
+- [`orbital.kepler_velocity`](./physics.orbital.md#function-kepler_velocity): Velocity in orbital plane from eccentric anomaly.
+- [`orbital.orbit_closure_verify`](./physics.orbital.md#function-orbit_closure_verify): Verify orbit closure: distance between first and last position.
+- [`orbital.orbit_propagate`](./physics.orbital.md#function-orbit_propagate): Propagate orbit for n_steps, advancing mean anomaly by dM each step.
+- [`orbital.orbital_energy`](./physics.orbital.md#function-orbital_energy): Specific orbital energy (vis-viva).
+- [`orbital.true_anomaly`](./physics.orbital.md#function-true_anomaly): True anomaly from eccentric anomaly.
+- [`qed.a2_coefficient`](./physics.qed.md#function-a2_coefficient): 2-loop QED coefficient A2.
+- [`qed.a3_coefficient`](./physics.qed.md#function-a3_coefficient): 3-loop QED coefficient A3 (Laporta & Remiddi).
+- [`qed.anomalous_moment`](./physics.qed.md#function-anomalous_moment): Electron anomalous magnetic moment a_e = (g-2)/2.
+- [`qed.transcendental_weight`](./physics.qed.md#function-transcendental_weight): Transcendental weight assignment.
+- [`quantum.anticommutator`](./physics.quantum.md#function-anticommutator): Matrix anticommutator {A, B} = AB + BA.
+- [`quantum.commutator`](./physics.quantum.md#function-commutator): Matrix commutator [A, B] = AB - BA.
+- [`quantum.density_matrix`](./physics.quantum.md#function-density_matrix): Density matrix rho = |psi><psi| (outer product).
+- [`quantum.expectation_value`](./physics.quantum.md#function-expectation_value): Expectation value <psi|O|psi>.
+- [`quantum.measurement_probabilities`](./physics.quantum.md#function-measurement_probabilities): Born rule measurement probabilities.
+- [`quantum.pauli_multiply`](./physics.quantum.md#function-pauli_multiply): Multiply two Pauli matrices by label.
+- [`quantum.spin_rotation`](./physics.quantum.md#function-spin_rotation): Spin-1/2 rotation matrix (real part only, for real-axis rotations).
+- [`quantum.spin_rotation_components`](./physics.quantum.md#function-spin_rotation_components): Compute cos(theta/2) and sin(theta/2) for spin rotation.
+- [`quantum.verify_unitarity`](./physics.quantum.md#function-verify_unitarity): Verify U^T * U == I (for real unitary / orthogonal matrices).
+- [`structural.apply_boundary_conditions`](./physics.structural.md#function-apply_boundary_conditions): Apply boundary conditions by zeroing rows/columns of fixed DOFs.
+- [`structural.assemble_stiffness`](./physics.structural.md#function-assemble_stiffness): Assemble global stiffness matrix from element contributions.
+- [`structural.element_forces`](./physics.structural.md#function-element_forces): Compute element internal forces from element stiffness and displacements.
+- [`structural.reaction_forces`](./physics.structural.md#function-reaction_forces): Compute reaction forces at supports.
+- [`structural.solve_structure`](./physics.structural.md#function-solve_structure): Solve Ku = F for displacements.
+- [`structural.truss_element_stiffness`](./physics.structural.md#function-truss_element_stiffness): 2D truss element stiffness matrix in global coordinates (4x4).
+- [`structural.verify_equilibrium`](./physics.structural.md#function-verify_equilibrium): Verify K @ u == F exactly.
+- [`thermo.boltzmann_probabilities`](./physics.thermo.md#function-boltzmann_probabilities): Boltzmann probabilities p_i = exp(-beta*E_i) / Z.
+- [`thermo.boltzmann_weight`](./physics.thermo.md#function-boltzmann_weight): Boltzmann weight exp(-beta * E).
+- [`thermo.entropy`](./physics.thermo.md#function-entropy): Entropy S = beta * (U - F) = beta * U + ln(Z).
+- [`thermo.free_energy`](./physics.thermo.md#function-free_energy): Helmholtz free energy F = -ln(Z) / beta.
+- [`thermo.internal_energy`](./physics.thermo.md#function-internal_energy): Internal energy U = sum E_i * p_i = <E>.
+- [`thermo.ising_1d_partition`](./physics.thermo.md#function-ising_1d_partition): 1D Ising partition function with zero external field.
+- [`thermo.ising_1d_transfer`](./physics.thermo.md#function-ising_1d_transfer): 1D Ising model partition function via transfer matrix method.
+- [`thermo.ising_2d_exact_enumerate`](./physics.thermo.md#function-ising_2d_exact_enumerate): 2D Ising model by exact enumeration of all 2^(Lx*Ly) states.
+- [`thermo.partition_function`](./physics.thermo.md#function-partition_function): Canonical partition function Z = sum exp(-beta * E_i).
+- [`thermo.specific_heat`](./physics.thermo.md#function-specific_heat): Specific heat via discrete derivative of internal energy.
+- [`convolution.convolve`](./signal.convolution.md#function-convolve): Discrete linear convolution.
+- [`convolution.convolve_via_toeplitz`](./signal.convolution.md#function-convolve_via_toeplitz): Convolution via Toeplitz matrix-vector product.
+- [`convolution.correlate`](./signal.convolution.md#function-correlate): Discrete cross-correlation.
+- [`convolution.deconvolve`](./signal.convolution.md#function-deconvolve): Deconvolution: given y = h * x, recover x.
+- [`convolution.toeplitz_mat`](./signal.convolution.md#function-toeplitz_mat): Build Toeplitz convolution matrix from impulse response h.
+- [`dft.dft_matrix`](./signal.dft.md#function-dft_matrix): Build the N x N DFT matrix explicitly.
+- [`dft.exact_dft`](./signal.dft.md#function-exact_dft): Exact Discrete Fourier Transform.
+- [`dft.exact_idft`](./signal.dft.md#function-exact_idft): Exact Inverse Discrete Fourier Transform.
+- [`dft.parseval_verify`](./signal.dft.md#function-parseval_verify): Verify Parseval's theorem: sum |x[n]|^2 == (1/N) * sum |X[k]|^2.
+- [`dft.twiddle_factor`](./signal.dft.md#function-twiddle_factor): DFT twiddle factor W_N^{kn} = exp(-2*pi*i*k*n/N).
+- [`filters.frequency_response`](./signal.filters.md#function-frequency_response): Frequency response H(e^{j*omega}) of a digital filter.
+- [`filters.iir_filter`](./signal.filters.md#function-iir_filter): First-order IIR filter: y[n] = a * y[n-1] + x[n].
+- [`filters.iir_filter_general`](./signal.filters.md#function-iir_filter_general): General IIR filter (direct form I).
+- [`filters.moving_average`](./signal.filters.md#function-moving_average): Moving average filter.
+- [`filters.z_transform`](./signal.filters.md#function-z_transform): Evaluate z-transform H(z) = sum_{n=0}^{N-1} h[n] * z^{-n}.
+- [`schedule.compute_alpha_bars`](./signal.schedule.md#function-compute_alpha_bars): Compute cumulative product alpha_bar_t = product_{k=0}^{t} alpha_k.
+- [`schedule.compute_alphas`](./signal.schedule.md#function-compute_alphas): Compute alpha = 1 - beta for each timestep.
+- [`schedule.compute_sqrt_alpha_bars`](./signal.schedule.md#function-compute_sqrt_alpha_bars): Compute sqrt(alpha_bar) for each timestep via Newton iteration.
+- [`schedule.compute_sqrt_one_minus_alpha_bars`](./signal.schedule.md#function-compute_sqrt_one_minus_alpha_bars): Compute sqrt(1 - alpha_bar) for each timestep.
+- [`schedule.cosine_schedule_rational`](./signal.schedule.md#function-cosine_schedule_rational): Cosine noise schedule with rational cosine approximation.
+- [`schedule.linear_schedule`](./signal.schedule.md#function-linear_schedule): Linear noise schedule: T evenly-spaced beta values.
+
+
+---
+
+_This file was automatically generated via [lazydocs](https://github.com/ml-tooling/lazydocs)._
