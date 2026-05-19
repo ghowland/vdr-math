@@ -25,6 +25,8 @@ vdr-math is an exact arithmetic library where every value is an ordered triple `
 
 Validated across **921 tests in 38 mathematical and computational domains** with **zero VDR computation errors**.
 
+- [vdr-math on PyPI](https://pypi.org/project/vdr-math/)
+
 ---
 
 ## Table of Contents
