@@ -446,6 +446,17 @@ class VDR:
                 v, d = v // g, d // g
             return VDR(v, d, Remainder(0))
 
+        # Roll over atomic remainder when |base| >= D
+        if nr.is_atomic and abs(nr.base) >= d:
+            q, s = divmod(nr.base, d)
+            v = v + q
+            nr = Remainder(s)
+            if nr.is_zero:
+                g = gcd(abs(v), abs(d))
+                if g > 0:
+                    v, d = v // g, d // g
+                return VDR(v, d, Remainder(0))
+
         # Active node: try to reduce V, D if remainder is divisible
         g = gcd(abs(v), abs(d))
         if g > 1:
